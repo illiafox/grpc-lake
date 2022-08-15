@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package item_service.service.v1;
+
+option go_package = "github.com/illiafox/grpc-lake/gen/go/api/item_service/service/v1;pb";
+
+import "api/item_service/model/v1/item.proto";
+
+service ItemService {
+  // GetItem retrieves item by ID.
+  rpc GetItem(GetItemRequest) returns (GetItemResponse);
+
+  // CreateItem creates new item and returns its ID.
+  rpc CreateItem(CreateItemRequest) returns (CreateItemResponse);
+
+  // UpdateItem updates item by ID.
+  rpc UpdateItem(UpdateItemRequest) returns (UpdateItemResponse);
+
+   // DeleteItem deletes item by its ID.
+  rpc DeleteItem(DeleteItemRequest) returns (DeleteItemResponse);
+}
+
+message GetItemRequest {
+  // Item ID
+  string id = 1 ; //[(validate.rules).duration.required = true];
+}
+
+message GetItemResponse {
+  model.v1.Item item = 1;
+}
+
+message CreateItemRequest {
+  string name = 1; // [(validate.rules).duration.required = true];
+  bytes data = 2; //  [(validate.rules).duration.required = true];
+  string description = 3;
+}
+
+message CreateItemResponse {
+  // Item ID
+  string id = 1;
+}
+
+message UpdateItemRequest {
+  // Item ID
+  string id = 1;
+  model.v1.Item item = 2;
+}
+
+message UpdateItemResponse {
+  bool created = 1;
+}
+
+message DeleteItemRequest {
+  string id = 1;
+}
+
+message DeleteItemResponse {
+  bool deleted = 1;
+}

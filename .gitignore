@@ -1,0 +1,4 @@
+.idea
+
+# server logs
+server/app/cmd/lake/*.txt

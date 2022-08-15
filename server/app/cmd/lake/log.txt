@@ -1,0 +1,141 @@
+{"level":"info","ts":"Mon, 22 Aug 2022 14:59:48 EEST","caller":"zap/logger.go:16","msg":"http server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 14:59:48 EEST","caller":"zap/logger.go:16","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:03:50 EEST","caller":"app/listen.go:33","msg":"http server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:03:50 EEST","caller":"app/listen.go:22","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:12:50 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:12:50 EEST","caller":"app/listen.go:34","msg":"http server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:12:50 EEST","caller":"app/listen.go:52","msg":"Exit"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:13:46 EEST","caller":"app/listen.go:33","msg":"http server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:13:46 EEST","caller":"app/listen.go:22","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:13:47 EEST","caller":"app/listen.go:47","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:13:47 EEST","caller":"app/listen.go:51","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:15:52 EEST","caller":"app/listen.go:33","msg":"http server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:15:52 EEST","caller":"app/listen.go:22","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:15:53 EEST","caller":"app/listen.go:47","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:15:53 EEST","caller":"app/listen.go:51","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:16:55 EEST","caller":"app/listen.go:33","msg":"http server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:16:55 EEST","caller":"app/listen.go:22","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:17:01 EEST","caller":"app/listen.go:47","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:17:01 EEST","caller":"app/listen.go:51","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:17:39 EEST","caller":"app/listen.go:34","msg":"http server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:17:39 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:17:40 EEST","caller":"app/listen.go:48","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:17:40 EEST","caller":"app/listen.go:52","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:17:40 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:23:29 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:23:29 EEST","caller":"app/listen.go:34","msg":"http server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:24:37 EEST","caller":"app/listen.go:48","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:24:37 EEST","caller":"app/listen.go:52","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:24:37 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:25:12 EEST","caller":"app/listen.go:34","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:25:12 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:25:35 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:25:35 EEST","caller":"app/listen.go:34","msg":"HTTP server started"}
+{"level":"error","ts":"Mon, 22 Aug 2022 15:25:35 EEST","caller":"app/listen.go:26","msg":"grpc server","error":"listen tcp :8081: bind: address already in use"}
+{"level":"error","ts":"Mon, 22 Aug 2022 15:25:35 EEST","caller":"app/listen.go:37","msg":"http server","error":"listen tcp 0.0.0.0:8080: bind: address already in use"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:25:35 EEST","caller":"app/listen.go:48","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:25:35 EEST","caller":"app/listen.go:52","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:25:35 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:27:16 EEST","caller":"app/listen.go:42","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:27:16 EEST","caller":"app/listen.go:25","msg":"gRPC server started"}
+{"level":"error","ts":"Mon, 22 Aug 2022 15:27:16 EEST","caller":"app/listen.go:45","msg":"http server","error":"listen tcp 0.0.0.0:8080: bind: address already in use"}
+{"level":"error","ts":"Mon, 22 Aug 2022 15:27:16 EEST","caller":"app/listen.go:28","msg":"grpc server","error":"listen tcp :8081: bind: address already in use"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:27:16 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:29:00 EEST","caller":"app/listen.go:46","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:29:00 EEST","caller":"app/listen.go:25","msg":"gRPC server started"}
+{"level":"error","ts":"Mon, 22 Aug 2022 15:29:00 EEST","caller":"app/listen.go:49","msg":"http server","error":"listen tcp 0.0.0.0:8080: bind: address already in use"}
+{"level":"error","ts":"Mon, 22 Aug 2022 15:29:00 EEST","caller":"app/listen.go:28","msg":"grpc server","error":"listen tcp :8081: bind: address already in use"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:29:00 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:29:05 EEST","caller":"app/listen.go:48","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:29:05 EEST","caller":"app/listen.go:52","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:29:05 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:29:07 EEST","caller":"app/listen.go:46","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:29:07 EEST","caller":"app/listen.go:25","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:29:08 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:30:25 EEST","caller":"app/listen.go:43","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:30:25 EEST","caller":"app/listen.go:25","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:30:26 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:31:31 EEST","caller":"app/listen.go:30","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:31:31 EEST","caller":"app/listen.go:49","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:37:12 EEST","caller":"app/listen.go:32","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:37:12 EEST","caller":"app/listen.go:51","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:39:05 EEST","caller":"app/listen.go:50","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 15:39:05 EEST","caller":"app/listen.go:31","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:19:27 EEST","caller":"app/listen.go:47","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:19:27 EEST","caller":"app/listen.go:29","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:23:59 EEST","caller":"app/listen.go:35","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:23:59 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:24:00 EEST","caller":"app/listen.go:47","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:24:00 EEST","caller":"app/listen.go:53","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:24:00 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:50 EEST","caller":"app/listen.go:35","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:50 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:51 EEST","caller":"app/listen.go:50","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:51 EEST","caller":"app/listen.go:57","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:51 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:53 EEST","caller":"app/listen.go:35","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:53 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:56 EEST","caller":"app/listen.go:35","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:56 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"error","ts":"Mon, 22 Aug 2022 16:25:56 EEST","caller":"app/listen.go:39","msg":"http server","error":"listen tcp 0.0.0.0:8080: bind: address already in use"}
+{"level":"error","ts":"Mon, 22 Aug 2022 16:25:56 EEST","caller":"app/listen.go:27","msg":"grpc server","error":"listen tcp :8081: bind: address already in use"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:56 EEST","caller":"app/listen.go:50","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:56 EEST","caller":"app/listen.go:57","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:25:56 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:20 EEST","caller":"app/listen.go:35","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:20 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"error","ts":"Mon, 22 Aug 2022 16:27:20 EEST","caller":"app/listen.go:39","msg":"http server","error":"listen tcp 0.0.0.0:8080: bind: address already in use"}
+{"level":"error","ts":"Mon, 22 Aug 2022 16:27:20 EEST","caller":"app/listen.go:27","msg":"grpc server","error":"listen tcp :8081: bind: address already in use"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:20 EEST","caller":"app/listen.go:50","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:20 EEST","caller":"app/listen.go:57","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:20 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:28 EEST","caller":"app/listen.go:50","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:28 EEST","caller":"app/listen.go:57","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:28 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:42 EEST","caller":"app/listen.go:35","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:27:42 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:29:21 EEST","caller":"app/listen.go:50","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:29:21 EEST","caller":"app/listen.go:57","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:29:21 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:29:23 EEST","caller":"app/listen.go:35","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:29:23 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:30:37 EEST","caller":"app/listen.go:50","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:30:37 EEST","caller":"app/listen.go:57","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:30:37 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:30:39 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:30:39 EEST","caller":"app/listen.go:35","msg":"HTTP server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:31:41 EEST","caller":"app/listen.go:50","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:31:41 EEST","caller":"app/listen.go:57","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:31:41 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:31:43 EEST","caller":"app/listen.go:23","msg":"gRPC server started"}
+{"level":"info","ts":"Mon, 22 Aug 2022 16:31:43 EEST","caller":"app/listen.go:35","msg":"HTTP server started"}
+{"level":"info","ts":"Tue, 23 Aug 2022 13:32:08 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"error","ts":"Tue, 23 Aug 2022 13:33:08 EEST","caller":"app/config.go:11","msg":"config","error":"read env: field \"Address\" is required but the value is not provided"}
+{"level":"info","ts":"Tue, 23 Aug 2022 13:33:08 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"error","ts":"Tue, 23 Aug 2022 13:33:21 EEST","caller":"app/config.go:11","msg":"config","error":"read env: field \"Address\" is required but the value is not provided"}
+{"level":"info","ts":"Tue, 23 Aug 2022 13:33:21 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"error","ts":"Tue, 23 Aug 2022 13:34:18 EEST","caller":"app/config.go:11","msg":"config","error":"read env: field \"Address\" is required but the value is not provided"}
+{"level":"info","ts":"Tue, 23 Aug 2022 13:34:18 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"error","ts":"Tue, 23 Aug 2022 13:35:06 EEST","caller":"app/config.go:12","msg":"config","error":"read env: field \"Address\" is required but the value is not provided"}
+{"level":"info","ts":"Tue, 23 Aug 2022 13:35:06 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:34:22 EEST","caller":"app/listen.go:41","msg":"HTTP server started","port":8080}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:34:22 EEST","caller":"app/listen.go:29","msg":"gRPC server started","port":8081}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:34:52 EEST","caller":"app/listen.go:56","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:34:52 EEST","caller":"app/listen.go:63","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:34:52 EEST","caller":"closer/closer.go:41","msg":"Closing redis connections"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:34:52 EEST","caller":"closer/closer.go:41","msg":"Closing mongodb connections"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:34:52 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:37:19 EEST","caller":"app/listen.go:41","msg":"HTTP server started","port":8080}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:37:19 EEST","caller":"app/listen.go:29","msg":"gRPC server started","port":8081}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:38:31 EEST","caller":"app/listen.go:56","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:38:31 EEST","caller":"app/listen.go:63","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:38:31 EEST","caller":"closer/closer.go:41","msg":"Closing redis connections"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:38:31 EEST","caller":"closer/closer.go:41","msg":"Closing mongodb connections"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:38:31 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:38:33 EEST","caller":"app/listen.go:41","msg":"HTTP server started","port":8082}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:38:33 EEST","caller":"app/listen.go:29","msg":"gRPC server started","port":8080}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:39:02 EEST","caller":"app/listen.go:56","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:39:02 EEST","caller":"app/listen.go:63","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:39:02 EEST","caller":"closer/closer.go:41","msg":"Closing redis connections"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:39:02 EEST","caller":"closer/closer.go:41","msg":"Closing mongodb connections"}
+{"level":"info","ts":"Sun, 28 Aug 2022 21:39:02 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}

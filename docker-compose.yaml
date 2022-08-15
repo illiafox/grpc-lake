@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+
+    #volumes:
+    #  - ~/apps/mongo:/data/db
+
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=username
+      - MONGO_INITDB_ROOT_PASSWORD=password
+
+  redis:
+    restart: on-failure
+
+    image: "redis:latest"
+
+    command: redis-server --port 6379
+
+    ports:
+      - "6379:6379"
+
+    environment:
+      REDIS_REPLICATION_MODE: master
+
+    # volumes:
+    #  - redis-data:/var/lib/redis

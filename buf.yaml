@@ -1,0 +1,13 @@
+version: v1
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT
+  ignore:
+    - google
+
+name: buf.build/grpc-lake/item_service
+deps:
+  - buf.build/googleapis/googleapis

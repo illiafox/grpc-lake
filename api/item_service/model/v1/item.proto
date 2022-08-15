@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package item_service.model.v1;
+
+option go_package = "github.com/illiafox/grpc-lake/gen/go/api/item_service/model/v1;pb_model";
+
+import "google/protobuf/timestamp.proto";
+
+message Item {
+  string name = 1;
+  bytes data = 2;
+  google.protobuf.Timestamp created = 3;
+  string description = 4;
+}
