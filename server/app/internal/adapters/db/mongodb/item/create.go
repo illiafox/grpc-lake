@@ -2,10 +2,11 @@ package item
 
 import (
 	"context"
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"server/app/internal/adapters/db/mongodb/item/model"
 	"server/app/pkg/errors"
-	"time"
 )
 
 func (i itemStorage) CreateItem(ctx context.Context, name string, data []byte, description string) (string, error) {

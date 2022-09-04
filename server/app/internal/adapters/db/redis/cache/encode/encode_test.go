@@ -1,10 +1,11 @@
 package encode
 
 import (
-	"github.com/stretchr/testify/require"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestMsgPack(t *testing.T) {

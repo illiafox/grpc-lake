@@ -1,11 +1,12 @@
 package model
 
 import (
+	"testing"
+	"time"
+
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"server/app/internal/domain/entity"
-	"testing"
-	"time"
 )
 
 func TestEntityToItem(t *testing.T) {

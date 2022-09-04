@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/pprof"
+
 	"server/app/internal/metrics"
 )
 

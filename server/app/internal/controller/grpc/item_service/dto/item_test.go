@@ -1,11 +1,12 @@
 package dto
 
 import (
+	"testing"
+	"time"
+
 	pb_model "github.com/illiafox/grpc-lake/gen/go/api/item_service/model/v1"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"testing"
-	"time"
 )
 
 func TestItemToProto(t *testing.T) {

@@ -2,9 +2,10 @@ package log
 
 import (
 	"errors"
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
-	"testing"
 )
 
 func TestFuncs(t *testing.T) {

@@ -2,10 +2,11 @@ package middleware
 
 import (
 	"context"
-	"github.com/stretchr/testify/require"
 	"io"
-	"server/app/pkg/log"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+	"server/app/pkg/log"
 )
 
 func TestLogger(t *testing.T) {

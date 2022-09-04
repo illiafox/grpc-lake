@@ -3,10 +3,11 @@ package composite
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"server/app/internal/config"
 	"server/app/pkg/client/mongodb"
-	"time"
 )
 
 var _ = Composite[*mongo.Client](mongoComposite{})

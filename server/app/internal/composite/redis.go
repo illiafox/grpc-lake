@@ -3,6 +3,7 @@ package composite
 import (
 	"context"
 	"fmt"
+
 	"github.com/go-redis/redis/v9"
 	"server/app/internal/config"
 	rdb "server/app/pkg/client/redis"

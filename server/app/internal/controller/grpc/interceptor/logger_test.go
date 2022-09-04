@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"io"
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
-	"io"
 	"server/app/internal/controller/grpc/interceptor/middleware"
 	"server/app/pkg/log"
-	"testing"
 )
 
 func TestLoggerInterceptor(t *testing.T) {

@@ -2,8 +2,9 @@ package closer
 
 import (
 	"io"
-	"server/app/pkg/log"
 	"sync"
+
+	"server/app/pkg/log"
 )
 
 type Closer struct {

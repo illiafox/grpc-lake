@@ -2,6 +2,7 @@ package app
 
 import (
 	"log"
+
 	"server/app/internal/config"
 )
 

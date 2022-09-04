@@ -1,8 +1,9 @@
 package encode
 
 import (
-	"server/app/internal/domain/entity"
 	"time"
+
+	"server/app/internal/domain/entity"
 )
 
 //go:generate msgp

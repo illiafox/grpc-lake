@@ -2,9 +2,10 @@ package grpc
 
 import (
 	"fmt"
+	"net"
+
 	pb "github.com/illiafox/grpc-lake/gen/go/api/item_service/service/v1"
 	"google.golang.org/grpc"
-	"net"
 	service "server/app/internal/adapters/api"
 	"server/app/internal/controller/grpc/interceptor"
 	"server/app/internal/controller/grpc/item_service"

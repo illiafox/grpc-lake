@@ -1,8 +1,9 @@
 package metrics
 
 import (
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func HTTP() http.Handler {

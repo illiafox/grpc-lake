@@ -139,3 +139,12 @@
 {"level":"info","ts":"Sun, 28 Aug 2022 21:39:02 EEST","caller":"closer/closer.go:41","msg":"Closing redis connections"}
 {"level":"info","ts":"Sun, 28 Aug 2022 21:39:02 EEST","caller":"closer/closer.go:41","msg":"Closing mongodb connections"}
 {"level":"info","ts":"Sun, 28 Aug 2022 21:39:02 EEST","caller":"closer/closer.go:41","msg":"Closing log file"}
+{"level":"info","ts":"Sun, 28 Aug 2022 22:49:52 EEST","caller":"app/listen.go:42","msg":"HTTP server started","port":8082}
+{"level":"info","ts":"Sun, 28 Aug 2022 22:49:52 EEST","caller":"app/listen.go:30","msg":"gRPC server started","port":8080}
+{"level":"info","ts":"Sun, 28 Aug 2022 22:49:53 EEST","caller":"app/listen.go:57","msg":"Shutting down HTTP server"}
+{"level":"info","ts":"Sun, 28 Aug 2022 22:49:53 EEST","caller":"app/listen.go:64","msg":"Shutting down gRPC server"}
+{"level":"info","ts":"Sun, 28 Aug 2022 22:49:53 EEST","caller":"closer/closer.go:42","msg":"Closing redis connections"}
+{"level":"info","ts":"Sun, 28 Aug 2022 22:49:53 EEST","caller":"closer/closer.go:42","msg":"Closing mongodb connections"}
+{"level":"info","ts":"Sun, 28 Aug 2022 22:49:53 EEST","caller":"closer/closer.go:42","msg":"Closing log file"}
+{"level":"error","ts":"Thu, 01 Sep 2022 10:32:14 EEST","caller":"app/listen.go:19","msg":"create item service","error":"mongodb: connect: ping: server selection error: context deadline exceeded, current topology: { Type: Unknown, Servers: [{ Addr: localhost:27017, Type: Unknown, Last error: connection() error occurred during connection handshake: dial tcp [::1]:27017: connect: connection refused }, ] }"}
+{"level":"info","ts":"Thu, 01 Sep 2022 10:32:14 EEST","caller":"closer/closer.go:42","msg":"Closing log file"}

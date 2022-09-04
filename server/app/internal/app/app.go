@@ -1,10 +1,11 @@
 package app
 
 import (
-	"server/app/internal/config"
-	"server/app/pkg/closer"
-	"server/app/pkg/log"
+	"server/app/pkg/log/closer"
 	"time"
+
+	"server/app/internal/config"
+	"server/app/pkg/log"
 )
 
 type flags struct {
