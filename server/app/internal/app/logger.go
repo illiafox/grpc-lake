@@ -7,10 +7,10 @@ import (
 	"server/app/pkg/log"
 )
 
-func (a *App) InitLogger() {
-	file, err := os.OpenFile(a.flags.log, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+func (app *App) InitLogger() {
+	file, err := os.OpenFile(app.flags.log, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		std_log.Fatalf("open log file (%s): %s \n", a.flags.log, err)
+		std_log.Fatalf("open log file (%s): %s \n", app.flags.log, err)
 	}
 
 	logger, err := log.New(os.Stdout, file)
@@ -18,6 +18,6 @@ func (a *App) InitLogger() {
 		std_log.Fatalf("init logger: %s \n", err)
 	}
 
-	a.closers.Add(file, "Closing log file")
-	a.logger = logger
+	app.closers.Add(file, "Closing log file")
+	app.logger = logger
 }

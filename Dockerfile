@@ -35,7 +35,8 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
 
 
 ### Final stage: Run the binary
-FROM scratch
+# why not scratch? we need bash to connect to the container
+FROM busybox:latest
 
 COPY --from=builder /bin/server /server
 ENTRYPOINT ["./server"]

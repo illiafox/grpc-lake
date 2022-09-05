@@ -1,11 +1,11 @@
 package app
 
 import (
-	"server/app/pkg/log/closer"
 	"time"
 
 	"server/app/internal/config"
 	"server/app/pkg/log"
+	"server/app/pkg/log/closer"
 )
 
 type flags struct {
@@ -23,9 +23,9 @@ type App struct {
 	closers closer.Closers
 }
 
-func (a *App) Run() {
-	a.ReadConfig()
-	a.InitLogger()
+func (app *App) Run() {
+	app.ReadConfig()
+	app.InitLogger()
 	//
-	a.Listen()
+	app.Listen()
 }

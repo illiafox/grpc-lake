@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func Init() App {
+func Init() *App {
 
 	// // flags
 
@@ -29,5 +29,5 @@ func Init() App {
 
 	defer runtime.GC() // force garbage collector to clear unused flag pointers
 
-	return app
+	return &app
 }

@@ -10,17 +10,17 @@ services:
 
 
     ports:
-      - "27017:27017"
+      - "27018:27017"
 
     healthcheck:
-      test: mongosh --eval 'db.runCommand("ping").ok' -u username -p password
+      test: mongosh --eval 'db.runCommand("ping").ok' -u server -p pass
       interval: 2s
       timeout: 10s
       retries: 10
 
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=username
-      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_ROOT_USERNAME=server
+      - MONGO_INITDB_ROOT_PASSWORD=pass
 
   redis:
     networks:
@@ -35,8 +35,9 @@ services:
       interval: 2s
       timeout: 2s
       retries: 10
+
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
     volumes:
       - redis-data:/var/lib/redis
@@ -54,18 +55,24 @@ services:
 
     networks:
       - local
-    # restart: on-failure # disabled for debugging
+
+    build: .
+
+    volumes:
+      - "app-logs:/logs"
+
+    command:
+      - "-log=/logs/log.txt"
 
     ports:
       - "8080:8080"
       - "8082:8082"
 
-    build: .
     env_file: .env
 
     environment:
       ### MongoDB
-      - MONGODB_URI=mongodb://username:password@mongodb:27017
+      - MONGODB_URI=mongodb://server:pass@mongodb:27017
       - MONGODB_DATABASE=lake
       - MONGODB_COLLECTION=items
       ### Redis
@@ -83,3 +90,4 @@ networks:
 volumes:
   redis-data:
   mongo-data:
+  app-logs:
