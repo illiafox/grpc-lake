@@ -7,7 +7,7 @@ import (
 	"os/signal"
 
 	"server/app/internal/controller/grpc"
-	http_server "server/app/internal/controller/http"
+	httpserver "server/app/internal/controller/http"
 	"server/app/pkg/log"
 )
 
@@ -36,7 +36,7 @@ func (app *App) Listen() {
 	}()
 
 	// HTTP
-	httpServer := http_server.NewServer("0.0.0.0", app.cfg.HTTP.Port)
+	httpServer := httpserver.NewServer("0.0.0.0", app.cfg.HTTP.Port)
 	go func() {
 		defer cancel()
 		app.logger.Info("HTTP server started", log.Int("port", app.cfg.HTTP.Port))

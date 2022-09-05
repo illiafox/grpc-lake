@@ -18,7 +18,10 @@ func (i itemStorage) GetItem(ctx context.Context, id string) (entity.Item, error
 		return entity.Item{}, fmt.Errorf("parse id: %w", err)
 	}
 
-	result := i.collection.FindOne(ctx, bson.D{{"_id", objectID}})
+	result := i.collection.FindOne(ctx, bson.D{
+		{Key: "_id", Value: objectID},
+	})
+
 	if err = result.Err(); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return entity.Item{}, entity.ErrItemNotFound

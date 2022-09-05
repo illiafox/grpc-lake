@@ -2,6 +2,10 @@
 
 # gRPC lake - dead simple CRUD
 
+[![Go](https://github.com/illiafox/grpc-lake/actions/workflows/go.yml/badge.svg)](https://github.com/illiafox/grpc-lake/actions/workflows/go.yml)
+[![Docker Image CI](https://github.com/illiafox/grpc-lake/actions/workflows/docker-image.yml/badge.svg)](https://github.com/illiafox/grpc-lake/actions/workflows/docker-image.yml)
+[![golangci-lint](https://github.com/illiafox/grpc-lake/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/illiafox/grpc-lake/actions/workflows/golangci-lint.yml)
+
 ### Requirements
 
 * **Redis:** `7.0`
