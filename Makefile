@@ -2,10 +2,12 @@ include .env
 export
 
 BUILD=./app/cmd/lake
+APP_PATH=server/
 
 .PHONY: run
 run:
-	 cd server/$(BUILD) && go run .
+	 cd $(APP_PATH)$(BUILD) && go run .
+
 
 # # docker compose
 .PHONY: compose
@@ -23,7 +25,13 @@ compose-down:
 # # tests
 .PHONY: test
 test:
-	( cd server && go test -v ./... )
+	( cd $(APP_PATH) && go test -v ./... )
+
+# # generate
+.PHONY: generate
+generate:
+	( cd $(APP_PATH) && go generate ./... )
+
 
 # # format
 
@@ -32,8 +40,17 @@ format: gci ftag
 
 .PHONY: ftag
 ftag:
-	(cd server && find . -name "*.go" -exec formattag -file {} \;)
+	(cd $(APP_PATH) && find . -name "*.go" -exec formattag -file {} \;)
 
 .PHONY: gci
 gci:
-	(cd server && find . -name "*.go" -exec gci write {} \;)
+	(cd $(APP_PATH) && find . -name "*.go" -exec gci write {} \;)
+
+.PHONY: ghz
+ghz:
+	ghz --insecure \
+     --proto api/item_service/service/v1/item.proto \
+      --call item_service.service.v1.ItemService/GetItem \
+      -d '{"id":"$(ID)"}' \
+      -n 1000 -c 4 \
+      0.0.0.0:8080

@@ -9,32 +9,32 @@ import (
 	"server/app/internal/composite"
 )
 
-func (a *App) ItemService() (api.ItemService, error) {
+func (app *App) ItemService() (api.ItemService, error) {
 
-	m, err := composite.NewMongoComposite(a.cfg.MongoDB)
+	m, err := composite.NewMongoComposite(app.cfg.MongoDB)
 	if err != nil {
 		return nil, fmt.Errorf("mongodb: %w", err)
 	}
 
-	a.closers.Add(m, "Closing mongodb connections")
+	app.closers.Add(m, "Closing mongodb connections")
 
 	// //
 
-	r, err := composite.NewRedisComposite(a.cfg.Redis)
+	r, err := composite.NewRedisComposite(app.cfg.Redis)
 	if err != nil {
 		return nil, fmt.Errorf("redis: %w", err)
 	}
-	a.closers.Add(r, "Closing redis connections")
+	app.closers.Add(r, "Closing redis connections")
 
 	// //
 
 	return composite.NewItemService(
 		item.NewItemStorage(m.
 			Client().
-			Database(a.cfg.MongoDB.Database).
-			Collection(a.cfg.MongoDB.Collection),
+			Database(app.cfg.MongoDB.Database).
+			Collection(app.cfg.MongoDB.Collection),
 		),
 		//
-		cache.NewCacheStorage(r.Client(), a.cfg.Cache.CacheExpire),
+		cache.NewCacheStorage(r.Client(), app.cfg.Cache.CacheExpire),
 	), nil
 }

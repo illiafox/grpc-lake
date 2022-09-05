@@ -17,6 +17,6 @@ type Item struct {
 	Description string    `msgp:"desc"`
 }
 
-func (i Item) ToEntity() entity.Item {
-	return entity.Item(i)
+func (item Item) ToEntity() entity.Item {
+	return entity.Item(item)
 }
