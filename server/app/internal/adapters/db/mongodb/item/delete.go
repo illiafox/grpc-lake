@@ -15,7 +15,10 @@ func (i itemStorage) DeleteItem(ctx context.Context, id string) (deleted bool, e
 		return false, fmt.Errorf("parse id: %w", err)
 	}
 
-	result, err := i.collection.DeleteOne(ctx, bson.D{{"_id", objectID}})
+	result, err := i.collection.DeleteOne(ctx, bson.D{
+		{Key: "_id", Value: objectID},
+	})
+
 	if err != nil {
 		return false, errors.NewInternal("collection.DeleteOne", err)
 	}

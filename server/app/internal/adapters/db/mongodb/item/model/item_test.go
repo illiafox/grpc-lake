@@ -1,6 +1,7 @@
 package model
 
 import (
+	"reflect"
 	"testing"
 	"time"
 
@@ -9,7 +10,22 @@ import (
 	"server/app/internal/domain/entity"
 )
 
+func TestItemHasBSONTags(t *testing.T) {
+	var item Item
+
+	r := reflect.TypeOf(item)
+	for i := 0; i < r.NumField(); i++ {
+		if r.Field(i).Tag.Get("bson") == "" {
+			t.Fatalf("field %s.%s has empty `bson` tag",
+				r.Name(), r.Field(i).Name,
+			)
+		}
+	}
+}
+
 func TestEntityToItem(t *testing.T) {
+
+	// // Create a new Item
 	e := entity.Item{
 		Name:        "name",
 		Data:        []byte("data"),
@@ -17,18 +33,25 @@ func TestEntityToItem(t *testing.T) {
 		Description: "description",
 	}
 
-	i := EntityToItem(e)
+	// Check if all fields are set
+	checkFields(t, e)
+
+	// // Convert to Item
+	item := EntityToItem(e)
+
+	// Check if all converted fields are not empty
+	checkFields(t, item)
 
 	r := require.New(t)
-
-	r.Equal(e.Name, i.Name)
-	r.Equal(e.Data, i.Data.Data)
-	r.Equal(e.Created, i.Created.Time())
-	r.Equal(e.Description, i.Description)
+	// // Manual equality check
+	r.Equal(e.Name, item.Name)
+	r.Equal(e.Data, item.Data.Data)
+	r.Equal(e.Created, item.Created.Time())
+	r.Equal(e.Description, item.Description)
 }
 
 func TestItemToEntity(t *testing.T) {
-	i := Item{
+	item := Item{
 		Name: "name",
 		Data: primitive.Binary{
 			Data: []byte("data"),
@@ -37,11 +60,30 @@ func TestItemToEntity(t *testing.T) {
 		Description: "description",
 	}
 
-	e := i.ToEntity()
+	// Check if all fields are set
+	checkFields(t, item)
+
+	e := item.ToEntity()
+
+	// Check if all converted fields are not empty
+	checkFields(t, e)
 
 	r := require.New(t)
-	r.Equal(i.Name, e.Name)
-	r.Equal(i.Data.Data, e.Data)
-	r.Equal(i.Created.Time(), e.Created)
-	r.Equal(i.Description, e.Description)
+	r.Equal(item.Name, e.Name)
+	r.Equal(item.Data.Data, e.Data)
+	r.Equal(item.Created.Time(), e.Created)
+	r.Equal(item.Description, e.Description)
+}
+
+// checkFields checks whether all fields are set
+func checkFields(t *testing.T, item any) {
+	v := reflect.ValueOf(item)
+
+	for i := 0; i < v.NumField(); i++ {
+		if v.Field(i).IsZero() {
+			t.Fatalf("field %s.%s is empty (zero)",
+				v.Type().Name(), v.Type().Field(i).Name,
+			)
+		}
+	}
 }

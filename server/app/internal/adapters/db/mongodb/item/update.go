@@ -20,7 +20,10 @@ func (i itemStorage) UpdateItem(ctx context.Context, id string, item entity.Item
 
 	opts := options.Update().SetUpsert(true)
 
-	result, err := i.collection.UpdateByID(ctx, objectID, bson.D{{"$set", model.EntityToItem(item)}}, opts)
+	result, err := i.collection.UpdateByID(ctx, objectID, bson.D{
+		{Key: "$set", Value: model.EntityToItem(item)},
+	}, opts)
+
 	if err != nil {
 		return false, errors.NewInternal("collection.UpdateByID", err)
 	}

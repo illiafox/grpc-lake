@@ -6,8 +6,6 @@ import (
 	"server/app/pkg/log/zap"
 )
 
-const separator = "\n\n"
-
 // New creates a new logger.
 //
 // The first argument is the console writer, which logger writes in user-friendly format.
