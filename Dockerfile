@@ -1,12 +1,12 @@
 ### Initial stage: download modules
 FROM golang:1.19 as modules
-
 # App dependencies
 ADD server/go.mod server/go.sum /server/
+# ADD server/go.mod go.sum /server/
 
 # gRPC gen dependencies (replaced in go.mod)
-COPY ./gen/go/api/item_service/go.mod /gen/go/api/item_service/go.mod
-COPY ./gen/go/api/item_service/go.sum /gen/go/api/item_service/go.sum
+COPY gen/go/api/item_service/go.mod /gen/go/api/item_service/go.mod
+COPY gen/go/api/item_service/go.sum /gen/go/api/item_service/go.sum
 
 # download packages
 RUN cd /server && go mod download
@@ -23,8 +23,10 @@ RUN useradd server
 RUN mkdir -p /server
 COPY server /server
 
+RUN pwd
 # grpc gen
-COPY gen /gen
+COPY gen/go/api /gen/go/api
+RUN ls -R
 
 WORKDIR /server
 

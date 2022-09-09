@@ -8,9 +8,9 @@ import (
 )
 
 func (app *App) InitLogger() {
-	file, err := os.OpenFile(app.flags.log, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	file, err := os.OpenFile(app.Config.Flags.LogPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
-		std_log.Fatalf("open log file (%s): %s \n", app.flags.log, err)
+		std_log.Fatalf("open log file (%s): %s \n", app.Config.Flags.LogPath, err)
 	}
 
 	logger, err := log.New(os.Stdout, file)
@@ -19,5 +19,5 @@ func (app *App) InitLogger() {
 	}
 
 	app.closers.Add(file, "Closing log file")
-	app.logger = logger
+	app.Logger = logger
 }

@@ -1,8 +1,17 @@
 package main
 
-import apps "server/app/internal/app"
+import (
+	"log"
+
+	"server/app/internal/app"
+	"server/app/internal/config"
+)
 
 func main() {
-	app := apps.Init()
-	app.Run()
+	cfg, err := config.NewConfig()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	app.Run(cfg)
 }

@@ -56,7 +56,10 @@ services:
     networks:
       - local
 
-    build: .
+    build:
+      # context: ./server
+      dockerfile: Dockerfile
+
 
     volumes:
       - "app-logs:/logs"
