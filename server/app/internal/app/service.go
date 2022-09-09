@@ -11,7 +11,7 @@ import (
 
 func (app *App) ItemService() (api.ItemService, error) {
 
-	m, err := composite.NewMongoComposite(app.cfg.MongoDB)
+	m, err := composite.NewMongoComposite(app.Config.MongoDB)
 	if err != nil {
 		return nil, fmt.Errorf("mongodb: %w", err)
 	}
@@ -20,7 +20,7 @@ func (app *App) ItemService() (api.ItemService, error) {
 
 	// //
 
-	r, err := composite.NewRedisComposite(app.cfg.Redis)
+	r, err := composite.NewRedisComposite(app.Config.Redis)
 	if err != nil {
 		return nil, fmt.Errorf("redis: %w", err)
 	}
@@ -31,10 +31,10 @@ func (app *App) ItemService() (api.ItemService, error) {
 	return composite.NewItemService(
 		item.NewItemStorage(m.
 			Client().
-			Database(app.cfg.MongoDB.Database).
-			Collection(app.cfg.MongoDB.Collection),
+			Database(app.Config.MongoDB.Database).
+			Collection(app.Config.MongoDB.Collection),
 		),
 		//
-		cache.NewCacheStorage(r.Client(), app.cfg.Cache.CacheExpire),
+		cache.NewCacheStorage(r.Client(), app.Config.Cache.CacheExpire),
 	), nil
 }

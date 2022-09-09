@@ -35,6 +35,8 @@ type HTTP struct {
 }
 
 type Config struct {
+	Flags Flags
+
 	Cache Cache
 	Redis Redis
 

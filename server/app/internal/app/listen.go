@@ -5,45 +5,40 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"syscall"
 
+	"server/app/internal/adapters/api"
 	"server/app/internal/controller/grpc"
 	httpserver "server/app/internal/controller/http"
 	"server/app/pkg/log"
 )
 
-func (app *App) Listen() {
-	defer app.closers.Close(app.logger)
+func (app *App) Listen(item api.ItemService) {
 
-	item, err := app.ItemService()
-	if err != nil {
-		app.logger.Error("create item service", log.Error(err))
-		return
-	}
-
-	ctx, cancel := signal.NotifyContext(context.Background(), os.Kill, os.Interrupt)
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Kill, os.Interrupt, syscall.SIGTERM)
 	defer cancel()
 
 	// // gRPC
-	grpcServer := grpc.NewServer(app.logger, item)
+	grpcServer := grpc.NewServer(app.Logger, item)
 	go func() {
 		defer cancel()
-		app.logger.Info("gRPC server started", log.Int("port", app.cfg.GRPC.Port))
+		app.Logger.Info("gRPC server started", log.Int("port", app.Config.GRPC.Port))
 
-		err := grpcServer.Listen(app.cfg.GRPC.Port)
+		err := grpcServer.Listen(app.Config.GRPC.Port)
 		if err != nil {
-			app.logger.Error("grpc server", log.Error(err))
+			app.Logger.Error("grpc server", log.Error(err))
 		}
 	}()
 
 	// HTTP
-	httpServer := httpserver.NewServer("0.0.0.0", app.cfg.HTTP.Port)
+	httpServer := httpserver.NewServer("0.0.0.0", app.Config.HTTP.Port)
 	go func() {
 		defer cancel()
-		app.logger.Info("HTTP server started", log.Int("port", app.cfg.HTTP.Port))
+		app.Logger.Info("HTTP server started", log.Int("port", app.Config.HTTP.Port))
 
 		err := httpServer.ListenAndServe()
 		if err != http.ErrServerClosed {
-			app.logger.Error("http server", log.Error(err))
+			app.Logger.Error("http server", log.Error(err))
 			return
 		}
 	}()
@@ -54,13 +49,13 @@ func (app *App) Listen() {
 	// // Graceful shutdown
 
 	// HTTP
-	app.logger.Info("Shutting down HTTP server")
-	err = httpServer.Shutdown(context.TODO())
+	app.Logger.Info("Shutting down HTTP server")
+	err := httpServer.Shutdown(context.TODO())
 	if err != nil {
-		app.logger.Error("shutdown http server", log.Error(err))
+		app.Logger.Error("shutdown http server", log.Error(err))
 	}
 
 	// gRPC
-	app.logger.Info("Shutting down gRPC server")
+	app.Logger.Info("Shutting down gRPC server")
 	grpcServer.GracefulStop()
 }

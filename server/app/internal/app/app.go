@@ -1,31 +1,31 @@
 package app
 
 import (
-	"time"
-
 	"server/app/internal/config"
 	"server/app/pkg/log"
 	"server/app/pkg/log/closer"
 )
 
-type flags struct {
-	log            string
-	http           bool
-	connectTimeout time.Duration
-}
-
 type App struct {
-	flags flags
-	//
-	logger log.Logger
-	cfg    config.Config
+	Logger log.Logger
+	Config config.Config
 	//
 	closers closer.Closers
 }
 
-func (app *App) Run() {
-	app.ReadConfig()
+func Run(cfg config.Config) {
+	app := App{
+		Config: cfg,
+	}
 	app.InitLogger()
-	//
-	app.Listen()
+
+	defer app.closers.Close(app.Logger)
+
+	item, err := app.ItemService()
+	if err != nil {
+		app.Logger.Error("create item service", log.Error(err))
+		return
+	}
+
+	app.Listen(item)
 }
