@@ -36,7 +36,17 @@ func (app *App) Listen(item api.ItemService) {
 		defer cancel()
 		app.Logger.Info("HTTP server started", log.Int("port", app.Config.HTTP.Port))
 
-		err := httpServer.ListenAndServe()
+		var err error
+
+		if app.Config.Flags.HTTPS {
+			err = httpServer.ListenAndServeTLS(
+				app.Config.HTTP.HTTPS.CertFile,
+				app.Config.HTTP.HTTPS.KeyFile,
+			)
+		} else {
+			err = httpServer.ListenAndServe()
+		}
+
 		if err != http.ErrServerClosed {
 			app.Logger.Error("http server", log.Error(err))
 			return

@@ -1,6 +1,6 @@
 ### ⚠️ The project is under development, all versions until `1.0.0` are considered as not backward compatible.
 
-# gRPC lake - dead simple CRUD
+# gRPC lake - dead simple lake
 
 [![Go](https://github.com/illiafox/grpc-lake/actions/workflows/go.yml/badge.svg)](https://github.com/illiafox/grpc-lake/actions/workflows/go.yml)
 [![Docker Image CI](https://github.com/illiafox/grpc-lake/actions/workflows/docker-image.yml/badge.svg)](https://github.com/illiafox/grpc-lake/actions/workflows/docker-image.yml)
