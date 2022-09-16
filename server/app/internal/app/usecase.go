@@ -6,10 +6,11 @@ import (
 	"server/app/internal/adapters/api"
 	"server/app/internal/adapters/db/mongodb/item"
 	"server/app/internal/adapters/db/redis/cache"
+	"server/app/internal/adapters/rabbitmq"
 	"server/app/internal/composite"
 )
 
-func (app *App) ItemService() (api.ItemService, error) {
+func (app *App) ItemService() (api.ItemUsecase, error) {
 
 	m, err := composite.NewMongoComposite(app.Config.MongoDB)
 	if err != nil {
@@ -28,7 +29,15 @@ func (app *App) ItemService() (api.ItemService, error) {
 
 	// //
 
-	return composite.NewItemService(
+	k, err := composite.NewKafkaComposite(app.Config.RabbitMQ)
+	if err != nil {
+		return nil, fmt.Errorf("rabbitmq: %w", err)
+	}
+	app.closers.Add(k, "Closing rabbitmq connections")
+
+	// //
+
+	return composite.NewItemUsecase(
 		item.NewItemStorage(m.
 			Client().
 			Database(app.Config.MongoDB.Database).
@@ -36,5 +45,7 @@ func (app *App) ItemService() (api.ItemService, error) {
 		),
 		//
 		cache.NewCacheStorage(r.Client(), app.Config.Cache.CacheExpire),
+		//
+		rabbitmq.NewEventStorage(k.Client()),
 	), nil
 }

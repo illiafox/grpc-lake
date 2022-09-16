@@ -2,19 +2,17 @@ package cache
 
 import (
 	"context"
-
 	"server/app/internal/domain/entity"
-	"server/app/internal/domain/service"
 	"server/app/internal/metrics"
 	"server/app/pkg/errors"
 )
 
 type cacheWrapper struct {
-	item  service.ItemStorage
+	item  ItemStorage
 	cache CacheStorage
 }
 
-func NewCacheWrapper(storage service.ItemStorage, cache CacheStorage) service.ItemStorage {
+func NewCacheWrapper(storage ItemStorage, cache CacheStorage) any {
 	return cacheWrapper{
 		item:  storage,
 		cache: cache,

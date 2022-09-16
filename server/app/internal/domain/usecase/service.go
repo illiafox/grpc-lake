@@ -1,12 +1,11 @@
-package service
+package item
 
 import (
 	"context"
-
 	"server/app/internal/domain/entity"
 )
 
-type ItemStorage interface {
+type ItemService interface {
 	// CreateItem creates new item and returns its ID.
 	CreateItem(ctx context.Context, name string, data []byte, description string) (string, error)
 
