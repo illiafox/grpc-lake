@@ -2,8 +2,12 @@ package rabbitmq
 
 import (
 	"context"
-	"github.com/streadway/amqp"
+	"server/app/internal/config"
+
+	amqp "github.com/rabbitmq/amqp091-go"
+	"server/app/internal/domain/service/event"
 	"server/app/pkg/errors"
+	"server/app/pkg/log"
 )
 
 type brokerStorage struct {
@@ -15,22 +19,24 @@ type brokerStorage struct {
 	deliveryMode uint8
 }
 
-func NewBrokerStorage(channel *amqp.Channel, exchange, key string, PersistentDeliveryMode bool) {
+func NewEventStorage(channel *amqp.Channel, cfg config.RabbitMQ) event.MessageStorage {
 	storage := brokerStorage{
 		channel:  channel,
-		exchange: exchange,
-		key:      exchange,
+		exchange: cfg.Exchange.Name,
+		key:      cfg.Key,
 		//
 		deliveryMode: amqp.Transient,
 	}
 
-	if PersistentDeliveryMode {
+	if cfg.PersistentDeliveryMode {
 		storage.deliveryMode = amqp.Persistent
 	}
+
+	return storage
 }
 
 func (b brokerStorage) SendMessageJSON(ctx context.Context, data []byte) error {
-	err := b.channel.Publish(
+	err := b.channel.PublishWithContext(ctx,
 		// exchange
 		b.exchange,
 		// key
@@ -52,4 +58,15 @@ func (b brokerStorage) SendMessageJSON(ctx context.Context, data []byte) error {
 	}
 
 	return nil
+}
+
+func (b brokerStorage) HandleReturns(logger log.Logger) {
+	ch := make(chan string)
+	b.channel.NotifyCancel(ch)
+
+	for r := range ch {
+		logger.Error("RabbitMQ: cancelled",
+			log.String("reason", r),
+		)
+	}
 }

@@ -2,12 +2,14 @@ package composite
 
 import (
 	"server/app/internal/adapters/api"
-	"server/app/internal/adapters/cache"
-	"server/app/internal/domain/service"
+	"server/app/internal/domain/service/cache"
+	"server/app/internal/domain/service/event"
+	"server/app/internal/domain/usecase"
 )
 
-func NewItemService(itemStorage service.ItemStorage, cacheStorage cache.CacheStorage) api.ItemService {
-	itemStorage = cache.NewCacheWrapper(itemStorage, cacheStorage)
+func NewItemUsecase(itemStorage cache.ItemStorage, cacheStorage cache.CacheStorage, eventStorage event.MessageStorage) api.ItemUsecase {
+	cacheService := cache.NewCacheService(itemStorage, cacheStorage)
+	eventService := event.NewEventService(eventStorage)
 
-	return service.NewItemService(itemStorage)
+	return usecase.NewItemUsecase(cacheService, eventService)
 }

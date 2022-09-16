@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"server/app/internal/adapters/api"
+	"server/app/internal/adapters/brokers/rabbitmq"
 	"server/app/internal/adapters/db/mongodb/item"
 	"server/app/internal/adapters/db/redis/cache"
-	"server/app/internal/adapters/rabbitmq"
 	"server/app/internal/composite"
 )
 
@@ -29,7 +29,7 @@ func (app *App) ItemService() (api.ItemUsecase, error) {
 
 	// //
 
-	k, err := composite.NewKafkaComposite(app.Config.RabbitMQ)
+	k, err := composite.NewRabbitmqComposite(app.Config.RabbitMQ)
 	if err != nil {
 		return nil, fmt.Errorf("rabbitmq: %w", err)
 	}
@@ -46,6 +46,11 @@ func (app *App) ItemService() (api.ItemUsecase, error) {
 		//
 		cache.NewCacheStorage(r.Client(), app.Config.Cache.CacheExpire),
 		//
-		rabbitmq.NewEventStorage(k.Client()),
+		rabbitmq.NewEventStorage(
+			// channel
+			k.Client(),
+			// config
+			app.Config.RabbitMQ,
+		),
 	), nil
 }

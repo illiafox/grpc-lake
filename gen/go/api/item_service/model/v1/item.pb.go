@@ -26,10 +26,10 @@ type Item struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name        string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Data        []byte                 `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
-	Created     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created,proto3" json:"created,omitempty"`
-	Description string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Name        string                 `protobuf:"bytes,1,opt,name=name,proto3" format:"name,omitempty"`
+	Data        []byte                 `protobuf:"bytes,2,opt,name=data,proto3" format:"data,omitempty"`
+	Created     *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created,proto3" format:"created,omitempty"`
+	Description string                 `protobuf:"bytes,4,opt,name=description,proto3" format:"description,omitempty"`
 }
 
 func (x *Item) Reset() {

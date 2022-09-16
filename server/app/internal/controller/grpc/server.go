@@ -29,7 +29,7 @@ func (s Server) GracefulStop() {
 	s.srv.GracefulStop()
 }
 
-func NewServer(logger log.Logger, item service.ItemService) Server {
+func NewServer(logger log.Logger, item service.ItemUsecase) Server {
 
 	server := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(

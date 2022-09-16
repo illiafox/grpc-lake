@@ -3,6 +3,7 @@ package item
 import (
 	"context"
 	"fmt"
+	"server/app/internal/domain/service/cache"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -11,7 +12,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"server/app/internal/adapters/db/mongodb/item/model"
 	"server/app/internal/domain/entity"
-	"server/app/internal/domain/service"
 	"server/app/pkg/errors"
 )
 
@@ -19,7 +19,7 @@ type itemStorage struct {
 	collection *mongo.Collection
 }
 
-func NewItemStorage(collection *mongo.Collection) service.ItemStorage {
+func NewItemStorage(collection *mongo.Collection) cache.ItemStorage {
 	return &itemStorage{collection: collection}
 }
 

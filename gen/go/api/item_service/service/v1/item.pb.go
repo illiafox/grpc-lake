@@ -27,7 +27,7 @@ type GetItemRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Item ID
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` //[(validate.rules).duration.required = true];
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" format:"id,omitempty"` //[(validate.rules).duration.required = true];
 }
 
 func (x *GetItemRequest) Reset() {
@@ -74,7 +74,7 @@ type GetItemResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Item *v1.Item `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
+	Item *v1.Item `protobuf:"bytes,1,opt,name=item,proto3" format:"item,omitempty"`
 }
 
 func (x *GetItemResponse) Reset() {
@@ -121,9 +121,9 @@ type CreateItemRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name        string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"` // [(validate.rules).duration.required = true];
-	Data        []byte `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"` //  [(validate.rules).duration.required = true];
-	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Name        string `protobuf:"bytes,1,opt,name=name,proto3" format:"name,omitempty"` // [(validate.rules).duration.required = true];
+	Data        []byte `protobuf:"bytes,2,opt,name=data,proto3" format:"data,omitempty"` //  [(validate.rules).duration.required = true];
+	Description string `protobuf:"bytes,3,opt,name=description,proto3" format:"description,omitempty"`
 }
 
 func (x *CreateItemRequest) Reset() {
@@ -185,7 +185,7 @@ type CreateItemResponse struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Item ID
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" format:"id,omitempty"`
 }
 
 func (x *CreateItemResponse) Reset() {
@@ -233,8 +233,8 @@ type UpdateItemRequest struct {
 	unknownFields protoimpl.UnknownFields
 
 	// Item ID
-	Id   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Item *v1.Item `protobuf:"bytes,2,opt,name=item,proto3" json:"item,omitempty"`
+	Id   string   `protobuf:"bytes,1,opt,name=id,proto3" format:"id,omitempty"`
+	Item *v1.Item `protobuf:"bytes,2,opt,name=item,proto3" format:"item,omitempty"`
 }
 
 func (x *UpdateItemRequest) Reset() {
@@ -288,7 +288,7 @@ type UpdateItemResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Created bool `protobuf:"varint,1,opt,name=created,proto3" json:"created,omitempty"`
+	Created bool `protobuf:"varint,1,opt,name=created,proto3" format:"created,omitempty"`
 }
 
 func (x *UpdateItemResponse) Reset() {
@@ -335,7 +335,7 @@ type DeleteItemRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" format:"id,omitempty"`
 }
 
 func (x *DeleteItemRequest) Reset() {
@@ -382,7 +382,7 @@ type DeleteItemResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Deleted bool `protobuf:"varint,1,opt,name=deleted,proto3" json:"deleted,omitempty"`
+	Deleted bool `protobuf:"varint,1,opt,name=deleted,proto3" format:"deleted,omitempty"`
 }
 
 func (x *DeleteItemResponse) Reset() {

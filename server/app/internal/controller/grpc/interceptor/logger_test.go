@@ -47,9 +47,9 @@ func TestLoggerInterceptor(t *testing.T) {
 	require.NoError(t, err)
 
 	var expected = struct {
-		Method string `json:"method"`
+		Method string `format:"method"`
 	}{}
 
-	require.NoError(t, json.NewDecoder(&buf).Decode(&expected)) // decode json logs
+	require.NoError(t, json.NewDecoder(&buf).Decode(&expected)) // decode format logs
 	require.Equal(t, method, expected.Method)
 }

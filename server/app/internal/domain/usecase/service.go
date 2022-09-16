@@ -1,7 +1,8 @@
-package item
+package usecase
 
 import (
 	"context"
+
 	"server/app/internal/domain/entity"
 )
 
@@ -17,4 +18,8 @@ type ItemService interface {
 
 	// DeleteItem deletes item and don't returns error if not found.
 	DeleteItem(ctx context.Context, id string) (deleted bool, err error)
+}
+
+type EventService interface {
+	SendItemEvent(ctx context.Context, id string, action entity.Action) error
 }

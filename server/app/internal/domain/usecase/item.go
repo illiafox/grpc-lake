@@ -1,36 +1,42 @@
-package item
+package usecase
 
 import (
 	"context"
+	"fmt"
+	"time"
+
 	"server/app/internal/adapters/api"
 	"server/app/internal/domain/entity"
-	event2 "server/app/internal/domain/service/event"
 )
 
-type itemService struct {
-	storage ItemStorage
-	event   event2.EventStorage
+type itemUsecase struct {
+	item  ItemService
+	event EventService
 }
 
-func NewItemService(storage ItemStorage, event event2.EventStorage) api.ItemService {
-	return itemService{
-		storage: storage,
-		event:   event,
+func NewItemUsecase(item ItemService, event EventService) api.ItemUsecase {
+	return itemUsecase{
+		item:  item,
+		event: event,
 	}
 }
 
-func (s itemService) GetItem(ctx context.Context, id string) (entity.Item, error) {
-	// TODO: add get event
-	return s.storage.GetItem(ctx, id)
+func (s itemUsecase) GetItem(ctx context.Context, id string) (entity.Item, error) {
+	return s.item.GetItem(ctx, id)
 }
 
-func (s itemService) CreateItem(ctx context.Context, name string, data []byte, description string) (string, error) {
-	id, err := s.storage.CreateItem(ctx, name, data, description)
+func (s itemUsecase) CreateItem(ctx context.Context, name string, data []byte, description string) (string, error) {
+	// TODO: REMOVE BEFORE COMMMIT!!!!!!!!!!!!
+	t := time.Now()
+	id, err := s.item.CreateItem(ctx, name, data, description)
+	fmt.Println("CreateItem", time.Since(t))
 	if err != nil {
 		return "", err
 	}
 
-	err = s.event.(ctx, id)
+	t = time.Now()
+	err = s.event.SendItemEvent(ctx, id, entity.CreateEvent)
+	fmt.Println("SendItemEvent", time.Since(t))
 	if err != nil {
 		return "", err
 	}
@@ -38,19 +44,19 @@ func (s itemService) CreateItem(ctx context.Context, name string, data []byte, d
 	return id, nil
 }
 
-func (s itemService) UpdateItem(ctx context.Context, id string, item entity.Item) (created bool, err error) {
-	created, err = s.storage.UpdateItem(ctx, id, item)
+func (s itemUsecase) UpdateItem(ctx context.Context, id string, item entity.Item) (created bool, err error) {
+	created, err = s.item.UpdateItem(ctx, id, item)
 	if err != nil {
 		return false, err
 	}
 
 	if created {
-		err = s.event.SendCreateItemEvent(ctx, id)
+		err = s.event.SendItemEvent(ctx, id, entity.CreateEvent)
 		if err != nil {
 			return false, err
 		}
 	} else {
-		err = s.event.SendUpdateItemEvent(ctx, id)
+		err = s.event.SendItemEvent(ctx, id, entity.UpdateEvent)
 		if err != nil {
 			return false, err
 		}
@@ -59,14 +65,14 @@ func (s itemService) UpdateItem(ctx context.Context, id string, item entity.Item
 	return created, nil
 }
 
-func (s itemService) DeleteItem(ctx context.Context, id string) (deleted bool, err error) {
-	deleted, err = s.storage.DeleteItem(ctx, id)
+func (s itemUsecase) DeleteItem(ctx context.Context, id string) (deleted bool, err error) {
+	deleted, err = s.item.DeleteItem(ctx, id)
 	if err != nil {
 		return false, err
 	}
 
 	if deleted {
-		err = s.event.SendDeleteItemEvent(ctx, id)
+		err = s.event.SendItemEvent(ctx, id, entity.DeleteEvent)
 		if err != nil {
 			return false, err
 		}

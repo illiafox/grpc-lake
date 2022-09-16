@@ -70,7 +70,7 @@ func TestLoggerJsonOutput(t *testing.T) {
 		const value = "test"
 
 		var actual = struct {
-			With string `json:"with"`
+			With string `format:"with"`
 		}{}
 		l := logger.With(String("with", value))
 

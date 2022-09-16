@@ -11,10 +11,10 @@ var _ pb.ItemServiceServer = (*itemServer)(nil)
 type itemServer struct {
 	pb.UnimplementedItemServiceServer
 	//
-	item service.ItemService
+	item service.ItemUsecase
 }
 
-func NewServer(item service.ItemService) pb.ItemServiceServer {
+func NewServer(item service.ItemUsecase) pb.ItemServiceServer {
 	return itemServer{
 		item: item,
 	}

@@ -6,7 +6,7 @@ APP_PATH=server/
 
 .PHONY: run
 run:
-	 cd $(APP_PATH)$(BUILD) && go run .
+	 cd $(APP_PATH)$(BUILD) && go run . $(ARGS)
 
 
 # # docker compose
@@ -52,5 +52,5 @@ ghz:
      --proto api/item_service/service/v1/item.proto \
       --call item_service.service.v1.ItemService/GetItem \
       -d '{"id":"$(ID)"}' \
-      -n 1000 -c 4 \
+      -n 100000 -c 4 \
       0.0.0.0:8080

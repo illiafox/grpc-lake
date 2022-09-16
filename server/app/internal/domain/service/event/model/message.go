@@ -1,13 +1,19 @@
-package kafka
+package model
 
 import (
-	"context"
+	"encoding/json"
+	"time"
+
+	"server/app/internal/domain/entity"
 )
 
-type Message struct {
-	Data []byte
-}
+// NewMessage serializes the message to JSON.
+func NewMessage(id string, action entity.Action) ([]byte, error) {
+	msg := entity.Message{
+		ItemID:    id,
+		Action:    string(action),
+		Timestamp: time.Now().Unix(),
+	}
 
-type MessageWriter interface {
-	WriteMessage(ctx context.Context, msg Message) error
+	return json.Marshal(msg)
 }

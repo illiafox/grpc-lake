@@ -2,24 +2,28 @@ package cache
 
 import (
 	"context"
+	"fmt"
+	"time"
+
 	"server/app/internal/domain/entity"
+	"server/app/internal/domain/usecase"
 	"server/app/internal/metrics"
 	"server/app/pkg/errors"
 )
 
-type cacheWrapper struct {
+type cacheService struct {
 	item  ItemStorage
 	cache CacheStorage
 }
 
-func NewCacheWrapper(storage ItemStorage, cache CacheStorage) any {
-	return cacheWrapper{
+func NewCacheService(storage ItemStorage, cache CacheStorage) usecase.ItemService {
+	return cacheService{
 		item:  storage,
 		cache: cache,
 	}
 }
 
-func (c cacheWrapper) GetItem(ctx context.Context, id string) (entity.Item, error) {
+func (c cacheService) GetItem(ctx context.Context, id string) (entity.Item, error) {
 
 	metrics.IncCacheTotalRequests()
 	item, err := c.cache.GetItem(ctx, id)
@@ -55,14 +59,17 @@ func (c cacheWrapper) GetItem(ctx context.Context, id string) (entity.Item, erro
 	return item, nil
 }
 
-func (c cacheWrapper) CreateItem(ctx context.Context, name string, data []byte, description string) (string, error) {
-
+func (c cacheService) CreateItem(ctx context.Context, name string, data []byte, description string) (string, error) {
+	// TODO: REMOVEEE
+	t := time.Now()
 	// Call original storage
 	id, err := c.item.CreateItem(ctx, name, data, description)
 	if err != nil {
 		return "", err
 	}
+	fmt.Println("MongoDB", time.Since(t))
 
+	t = time.Now()
 	// Invalidate (Delete) cache
 	err = c.cache.DeleteItem(ctx, id)
 	if err != nil {
@@ -71,11 +78,12 @@ func (c cacheWrapper) CreateItem(ctx context.Context, name string, data []byte, 
 		}
 		return "", errors.NewInternal("cache.DeleteItem", err)
 	}
+	fmt.Println("Redis", time.Since(t))
 
 	return id, nil
 }
 
-func (c cacheWrapper) UpdateItem(ctx context.Context, id string, item entity.Item) (updated bool, err error) {
+func (c cacheService) UpdateItem(ctx context.Context, id string, item entity.Item) (updated bool, err error) {
 
 	// Call original storage
 	updated, err = c.item.UpdateItem(ctx, id, item)
@@ -94,7 +102,7 @@ func (c cacheWrapper) UpdateItem(ctx context.Context, id string, item entity.Ite
 
 	return updated, nil
 }
-func (c cacheWrapper) DeleteItem(ctx context.Context, id string) (deleted bool, err error) {
+func (c cacheService) DeleteItem(ctx context.Context, id string) (deleted bool, err error) {
 
 	// Call original storage
 	deleted, err = c.item.DeleteItem(ctx, id)

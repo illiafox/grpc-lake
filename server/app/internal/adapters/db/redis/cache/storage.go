@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v9"
-	"server/app/internal/adapters/cache"
 	"server/app/internal/adapters/db/redis/cache/encode"
 	"server/app/internal/domain/entity"
+	"server/app/internal/domain/service/cache"
 	"server/app/pkg/errors"
 )
 

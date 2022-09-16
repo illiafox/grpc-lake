@@ -34,11 +34,36 @@ type HTTP struct {
 	}
 }
 
+type RabbitMQ struct {
+	URI string `env:"RABBITMQ_URI" env-required:""`
+
+	Key      string `env:"RABBITMQ_KEY"      env-required:""`
+	Exchange struct {
+		Name       string `env:"RABBITMQ_EXCHANGE_NAME" env-required:"" `
+		Kind       string `env:"RABBITMQ_EXCHANGE_KIND" env-required:""`
+		Durable    bool   `env:"RABBITMQ_EXCHANGE_DURABLE" env-required:""`
+		AutoDelete bool   `env:"RABBITMQ_EXCHANGE_AUTO_DELETE" env-required:""`
+		Internal   bool   `env:"RABBITMQ_EXCHANGE_INTERNAL" env-required:"" `
+		NoWait     bool   `env:"RABBITMQ_EXCHANGE_NO_WAIT" env-required:"" `
+	}
+	Queue struct {
+		Name       string `env:"RABBITMQ_QUEUE_NAME" env-required:""`
+		Durable    bool   `env:"RABBITMQ_QUEUE_DURABLE" env-required:""`
+		AutoDelete bool   `env:"RABBITMQ_QUEUE_AUTODELETE" env-required:""`
+		Exclusive  bool   `env:"RABBITMQ_QUEUE_EXCLUSIVE" env-required:""`
+		NoWait     bool   `env:"RABBITMQ_QUEUE_NOWAIT" env-required:""`
+	}
+
+	PersistentDeliveryMode bool `env:"RABBITMQ_PERSISTENT_DELIVERY_MODE" env-required:""`
+}
+
 type Config struct {
 	Flags Flags
 
 	Cache Cache
 	Redis Redis
+
+	RabbitMQ RabbitMQ
 
 	MongoDB MongoDB
 	GRPC    GRPC

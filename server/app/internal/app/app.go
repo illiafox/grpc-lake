@@ -17,13 +17,14 @@ func Run(cfg config.Config) {
 	app := App{
 		Config: cfg,
 	}
-	app.InitLogger()
 
+	app.InitLogger()
+	defer app.Logger.Sync() // ignore error
 	defer app.closers.Close(app.Logger)
 
 	item, err := app.ItemService()
 	if err != nil {
-		app.Logger.Error("create item service", log.Error(err))
+		app.Logger.Error(err.Error())
 		return
 	}
 

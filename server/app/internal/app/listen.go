@@ -13,7 +13,7 @@ import (
 	"server/app/pkg/log"
 )
 
-func (app *App) Listen(item api.ItemService) {
+func (app *App) Listen(item api.ItemUsecase) {
 
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Kill, os.Interrupt, syscall.SIGTERM)
 	defer cancel()

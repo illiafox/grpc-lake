@@ -1,30 +1,29 @@
 package composite
 
 import (
-	"github.com/segmentio/kafka-go"
+	amqp "github.com/rabbitmq/amqp091-go"
 	"server/app/internal/config"
-	client "server/app/pkg/client/kafka"
+	client "server/app/pkg/client/rabbitmq"
 )
 
-var _ = Composite[*kafka.Writer](kafkaComposite{})
+var _ = Composite[*amqp.Channel](rabbitmqComposite{})
 
-type kafkaComposite struct {
-	writer *kafka.Writer
+type rabbitmqComposite struct {
+	channel *amqp.Channel
 }
 
-func (k kafkaComposite) Close() error {
-	return k.writer.Close()
+func (k rabbitmqComposite) Close() error {
+	return k.channel.Close()
 }
 
-func (k kafkaComposite) Client() *kafka.Writer {
-	return k.writer
+func (k rabbitmqComposite) Client() *amqp.Channel {
+	return k.channel
 }
 
-func NewKafkaComposite(cfg config.RabbitMQ) (Composite[*kafka.Writer], error) {
-	writer, err := client.NewWriter(client.Config(cfg))
+func NewRabbitmqComposite(cfg config.RabbitMQ) (Composite[*amqp.Channel], error) {
+	channel, err := client.NewDialChannel(cfg.URI, client.Queue(cfg.Queue), client.Exchange(cfg.Exchange))
 	if err != nil {
 		return nil, err
 	}
-
-	return kafkaComposite{writer}, nil
+	return rabbitmqComposite{channel}, nil
 }

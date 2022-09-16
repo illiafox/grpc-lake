@@ -6,7 +6,7 @@ import (
 	"server/app/internal/domain/entity"
 )
 
-type ItemService interface {
+type ItemUsecase interface {
 	// CreateItem creates new item and returns its ID.
 	CreateItem(ctx context.Context, name string, data []byte, description string) (string, error)
 
