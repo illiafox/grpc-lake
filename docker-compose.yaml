@@ -1,22 +1,61 @@
 version: '3.9'
 
 services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - broker-clickhouse
+      - local
+
+  clickhouse:
+    image: yandex/clickhouse-server:latest
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+      - "9009:9009"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1
+    networks:
+      - broker-clickhouse
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+
+    networks:
+      - broker-clickhouse
+    volumes:
+      - ./rabbitmq-clickhouse/migrate:/migrations
+    command:
+      [ "-database",  "clickhouse://clickhouse:9000?username=default&database=default&x-multi-statement=true" ,"-path", "/migrations", "up" ]
+
+
   mongodb:
     networks:
       - local
 
-    restart: on-failure
-    image: mongo:latest
-
-
+    image: mongo:5.0
     ports:
       - "27018:27017"
 
+    volumes:
+      - 'mongo-data:/data/db'
+
     healthcheck:
-      test: mongosh --eval 'db.runCommand("ping").ok' -u server -p pass
+      test: mongosh --eval 'db.runCommand("ping").ok'
       interval: 2s
-      timeout: 10s
-      retries: 10
+      timeout: 30s
 
     environment:
       - MONGO_INITDB_ROOT_USERNAME=server
@@ -40,7 +79,7 @@ services:
       - "6380:6379"
 
     volumes:
-      - redis-data:/var/lib/redis
+      - mongo-data:/var/lib/redis
 
     environment:
       REDIS_REPLICATION_MODE: master
@@ -52,6 +91,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
     networks:
       - local
@@ -75,18 +116,42 @@ services:
 
     environment:
       ### MongoDB
-      - MONGODB_URI=mongodb://server:pass@mongodb:27017
+      - MONGODB_URI=mongodb://server:pass@mongodb:27017/?authSource=admin
       - MONGODB_DATABASE=lake
       - MONGODB_COLLECTION=items
+
       ### Redis
       - REDIS_ADDRESSES=redis:6379
       - REDIS_POOL_TIMEOUT=5s
+
+      ### RabbitMQ
+      - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672/
+      - RABBITMQ_EXCHANGE=events
+      - RABBITMQ_KEY=actions
+      - RABBITMQ_PERSISTENT_DELIVERY_MODE=true
+      # if empty, a random queue name will be generated
+      - RABBITMQ_QUEUE_NAME=
+      - RABBITMQ_QUEUE_DURABLE=true
+      - RABBITMQ_QUEUE_AUTODELETE=false
+      - RABBITMQ_QUEUE_EXCLUSIVE=false
+      - RABBITMQ_QUEUE_NOWAIT=true
+
+      - RABBITMQ_EXCHANGE_NAME=events
+      # exchange type: direct, fanout, topic, headers
+      - RABBITMQ_EXCHANGE_KIND=fanout
+      - RABBITMQ_EXCHANGE_DURABLE=true
+      - RABBITMQ_EXCHANGE_AUTO_DELETE=false
+      # Internal must be false
+      - RABBITMQ_EXCHANGE_INTERNAL=false
+      - RABBITMQ_EXCHANGE_NO_WAIT=false
       ### gRPC
       - GRPC_PORT=8080
       ### HTTP
       - HTTP_PORT=8082
 
 networks:
+  broker-clickhouse:
+    driver: bridge
   local:
     driver: bridge
 
