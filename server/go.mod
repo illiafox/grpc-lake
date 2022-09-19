@@ -5,13 +5,14 @@ go 1.18
 replace github.com/illiafox/grpc-lake/gen/go/api/item_service v0.0.0-20220820144355-8a74229d423f => ./../gen/go/api/item_service
 
 require (
-	github.com/dchenk/msgp/msgp v0.0.0-20180815194337-5c34657c2259
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
+	github.com/golang/mock v1.6.0
 	github.com/illiafox/grpc-lake/gen/go/api/item_service v0.0.0-20220820144355-8a74229d423f
 	github.com/ilyakaznacheev/cleanenv v1.3.0
 	github.com/prometheus/client_golang v1.13.0
 	github.com/rabbitmq/amqp091-go v1.5.0
 	github.com/stretchr/testify v1.8.0
+	github.com/tinylib/msgp v1.1.6
 	go.mongodb.org/mongo-driver v1.10.2
 	go.uber.org/zap v1.23.0
 	google.golang.org/grpc v1.49.0
@@ -30,7 +31,7 @@ require (
 	github.com/klauspost/compress v1.15.7 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
-	github.com/philhofer/fwd v1.0.0 // indirect
+	github.com/philhofer/fwd v1.1.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect

@@ -1,7 +1,7 @@
 include .env
 export
 
-BUILD=./app/cmd/lake
+BUILD=./cmd/lake
 APP_PATH=server/
 
 .PHONY: run
@@ -21,7 +21,6 @@ compose-debug: compose-down
 .PHONY: compose-down
 compose-down:
 	docker-compose down
-
 # # tests
 .PHONY: test
 test:
@@ -30,20 +29,22 @@ test:
 # # generate
 .PHONY: generate
 generate:
+	# Installing Binaries
+	go install github.com/golang/mock/mockgen@v1.6.0
+	go install github.com/tinylib/msgp@v1.1.6
+	# Generating
 	( cd $(APP_PATH) && go generate ./... )
-
 
 # # format
 
 .PHONY: format
-format: gci ftag
-
-.PHONY: ftag
-ftag:
+format:
+	# Installing Binaries
+	go install github.com/daixiang0/gci@v0.7.0
+	go install github.com/momaek/formattag@v0.0.8
+	# Formatting
+	(cd $(APP_PATH) && go fmt ./...)
 	(cd $(APP_PATH) && find . -name "*.go" -exec formattag -file {} \;)
-
-.PHONY: gci
-gci:
 	(cd $(APP_PATH) && find . -name "*.go" -exec gci write {} \;)
 
 .PHONY: ghz

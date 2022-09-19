@@ -33,7 +33,7 @@ WORKDIR /server
 # Build the binary with go build
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
     go build -ldflags '-s -w -extldflags "-static"' \
-    -o /bin/server ./app/cmd/lake
+    -o /bin/server ./cmd/lake
 
 
 ### Final stage: Run the binary

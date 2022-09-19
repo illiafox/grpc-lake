@@ -2,4 +2,4 @@
 .env
 
 # server logs
-server/app/cmd/lake/*.txt
+server/cmd/lake/*.txt

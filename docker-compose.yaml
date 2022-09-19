@@ -10,11 +10,6 @@ services:
     networks:
       - broker-clickhouse
       - local
-    healthcheck:
-      #test: rabbitmq-diagnostics -q ping
-      test: sleep 15
-      interval: 1s
-      timeout: 30s
 
   clickhouse:
     image: yandex/clickhouse-server:latest
@@ -37,12 +32,11 @@ services:
     depends_on:
       clickhouse:
         condition: service_healthy
-#      rabbitmq:
-#        condition: service_healthy
+
     networks:
       - broker-clickhouse
     volumes:
-      - ./migrate:/migrations
+      - ./rabbitmq-clickhouse/migrate:/migrations
     command:
       [ "-database",  "clickhouse://clickhouse:9000?username=default&database=default&x-multi-statement=true" ,"-path", "/migrations", "up" ]
 
