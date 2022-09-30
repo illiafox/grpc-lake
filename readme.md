@@ -28,8 +28,8 @@ make compose # docker-compose up
 
 * `8080` - **gRPC**
 * `8082` - **HTTP** `/metrics` and `/debug/pprof`
-* `6780` - **Redis** without password
-* `27018` - **MongoDB** `server:pass`
+* `6379` - **Redis** without password
+* `27017` - **MongoDB** `server:pass`
 * `15672` `5672` - **RabbitMQ** `guest:guest`
 * `8123` `9000` `9009` - **ClickHouse** `default:default`
 

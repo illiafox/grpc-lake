@@ -2,33 +2,35 @@ package event
 
 import (
 	"context"
-	"testing"
-
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"server/internal/domain/entity"
 	"server/internal/domain/service/event/mocks"
-	"server/internal/domain/service/event/model"
+	"testing"
 )
+
+const TestID = "test"
 
 func TestEventService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
-	message := mocks.NewMockMessageStorage(ctrl)
-
-	service := NewEventService(message)
+	messageMock := mocks.NewMockMessageStorage(ctrl)
+	eventService := NewEventService(messageMock)
 
 	t.Run("SendItemEvent", func(t *testing.T) {
-		const id = "test"
+		actions := []entity.Action{entity.CreateEvent, entity.DeleteEvent, entity.UpdateEvent}
 
-		data, err := model.NewMessage(id, entity.CreateEvent)
-		require.NoError(t, err)
+		for _, action := range actions {
+			t.Run(string(action), func(t *testing.T) {
+				msg := entity.NewMessage(TestID, entity.CreateEvent)
 
-		message.EXPECT().
-			SendMessageJSON(gomock.Any(), data).
-			Return(nil).Times(1)
+				messageMock.EXPECT().
+					SendMessageJSON(gomock.Any(), msg).
+					Return(nil)
 
-		err = service.SendItemEvent(context.Background(), "test", entity.CreateEvent)
-		require.NoError(t, err)
+				err := eventService.SendItemEvent(context.Background(), TestID, entity.CreateEvent)
+				require.NoError(t, err)
+			})
+		}
 	})
 }

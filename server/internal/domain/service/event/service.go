@@ -2,11 +2,12 @@ package event
 
 import (
 	"context"
-
+	"fmt"
 	"server/internal/domain/entity"
-	"server/internal/domain/service/event/model"
-	"server/pkg/errors"
+	"server/internal/domain/usecase/item"
 )
+
+var _ item.EventService = (*EventService)(nil)
 
 type EventService struct {
 	sender MessageStorage
@@ -19,14 +20,11 @@ func NewEventService(sender MessageStorage) EventService {
 }
 
 func (e EventService) SendItemEvent(ctx context.Context, id string, action entity.Action) error {
-	data, err := model.NewMessage(id, action)
-	if err != nil {
-		return errors.NewInternal("encode message", err)
-	}
+	msg := entity.NewMessage(id, action)
 
-	err = e.sender.SendMessageJSON(ctx, data)
+	err := e.sender.SendMessageJSON(ctx, msg)
 	if err != nil {
-		return errors.NewInternal("send message", err)
+		return fmt.Errorf("SendMessageJSON: %w", err)
 	}
 
 	return nil

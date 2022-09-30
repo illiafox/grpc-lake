@@ -1,22 +1,24 @@
 package errors
 
+import (
+	"runtime"
+	"strconv"
+)
+
 const Separator = ": "
 
 type InternalError struct {
 	Err   error
 	Scope string
-}
-
-func Convert(err error) (internal InternalError, ok bool) {
-	internal, ok = err.(InternalError)
-
-	return
+	Line  string
 }
 
 func NewInternal(scope string, err error) error {
+	_, file, line, _ := runtime.Caller(1)
 	return InternalError{
 		Err:   err,
 		Scope: scope,
+		Line:  file + Separator + strconv.Itoa(line),
 	}
 }
 

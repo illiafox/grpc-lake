@@ -6,10 +6,11 @@ package mocks
 
 import (
 	context "context"
-	"go.uber.org/zap"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	zap "go.uber.org/zap"
+	entity "server/internal/domain/entity"
 )
 
 // MockMessageStorage is a mock of MessageStorage interface.
@@ -48,15 +49,15 @@ func (mr *MockMessageStorageMockRecorder) HandleReturns(logger interface{}) *gom
 }
 
 // SendMessageJSON mocks base method.
-func (m *MockMessageStorage) SendMessageJSON(ctx context.Context, data []byte) error {
+func (m *MockMessageStorage) SendMessageJSON(ctx context.Context, message entity.Message) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendMessageJSON", ctx, data)
+	ret := m.ctrl.Call(m, "SendMessageJSON", ctx, message)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SendMessageJSON indicates an expected call of SendMessageJSON.
-func (mr *MockMessageStorageMockRecorder) SendMessageJSON(ctx, data interface{}) *gomock.Call {
+func (mr *MockMessageStorageMockRecorder) SendMessageJSON(ctx, message interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessageJSON", reflect.TypeOf((*MockMessageStorage)(nil).SendMessageJSON), ctx, data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessageJSON", reflect.TypeOf((*MockMessageStorage)(nil).SendMessageJSON), ctx, message)
 }

@@ -16,9 +16,8 @@ func NewLoggerInterceptor(l *zap.Logger) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context,
 		req interface{},
 		info *grpc.UnaryServerInfo,
-		handler grpc.UnaryHandler) (
-		resp interface{},
-		err error) {
+		handler grpc.UnaryHandler,
+	) (resp interface{}, err error) {
 
 		//
 

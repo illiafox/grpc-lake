@@ -5,8 +5,8 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     ports:
-      - 5672:5672
-      - 15672:15672
+      - '5672:5672'
+      - '15672:15672'
     networks:
       - broker-clickhouse
       - local
@@ -36,9 +36,11 @@ services:
     networks:
       - broker-clickhouse
     volumes:
-      - ./rabbitmq-clickhouse/migrate:/migrations
+      - ./clickhouse/migrate:/migrations
     command:
-      [ "-database",  "clickhouse://clickhouse:9000?username=default&database=default&x-multi-statement=true" ,"-path", "/migrations", "up" ]
+      [ "-database",
+        "clickhouse://clickhouse:9000?username=default&database=default&x-multi-statement=true",
+        "-path", "/migrations", "up" ]
 
 
   mongodb:
@@ -47,7 +49,7 @@ services:
 
     image: mongo:5.0
     ports:
-      - "27018:27017"
+      - "27017:27017"
 
     volumes:
       - 'mongo-data:/data/db'
@@ -76,7 +78,7 @@ services:
       retries: 10
 
     ports:
-      - "6380:6379"
+      - "6379:6379"
 
     volumes:
       - mongo-data:/var/lib/redis
@@ -115,10 +117,12 @@ services:
     env_file: .env
 
     environment:
+      - TIME_ZONE=Europe/France
       ### MongoDB
       - MONGODB_URI=mongodb://server:pass@mongodb:27017/?authSource=admin
       - MONGODB_DATABASE=lake
       - MONGODB_COLLECTION=items
+      - MONGODB_CONNECT_TIMEOUT=10s
 
       ### Redis
       - REDIS_ADDRESSES=redis:6379

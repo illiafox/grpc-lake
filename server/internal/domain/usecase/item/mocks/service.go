@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	entity2 "server/internal/domain/entity"
+	entity "server/internal/domain/entity"
 )
 
 // MockItemService is a mock of ItemService interface.
@@ -66,10 +66,10 @@ func (mr *MockItemServiceMockRecorder) DeleteItem(ctx, id interface{}) *gomock.C
 }
 
 // GetItem mocks base method.
-func (m *MockItemService) GetItem(ctx context.Context, id string) (entity2.Item, error) {
+func (m *MockItemService) GetItem(ctx context.Context, id string) (entity.Item, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetItem", ctx, id)
-	ret0, _ := ret[0].(entity2.Item)
+	ret0, _ := ret[0].(entity.Item)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -81,7 +81,7 @@ func (mr *MockItemServiceMockRecorder) GetItem(ctx, id interface{}) *gomock.Call
 }
 
 // UpdateItem mocks base method.
-func (m *MockItemService) UpdateItem(ctx context.Context, id string, item entity2.Item) (bool, error) {
+func (m *MockItemService) UpdateItem(ctx context.Context, id string, item entity.Item) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateItem", ctx, id, item)
 	ret0, _ := ret[0].(bool)
@@ -119,7 +119,7 @@ func (m *MockEventService) EXPECT() *MockEventServiceMockRecorder {
 }
 
 // SendItemEvent mocks base method.
-func (m *MockEventService) SendItemEvent(ctx context.Context, id string, action entity2.Action) error {
+func (m *MockEventService) SendItemEvent(ctx context.Context, id string, action entity.Action) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SendItemEvent", ctx, id, action)
 	ret0, _ := ret[0].(error)

@@ -1,0 +1,56 @@
+# Cache
+cache:
+  cache_expire: 1m0s # cache expire time
+
+time:
+  location: Asia/Tokyo
+
+# gRPC settings:
+grpc:
+  port: 8081
+
+# HTTP settings:
+http:
+  port: 8082
+  https:
+    key_file: ""
+    cert_file: ""
+
+
+## --- Database settings --- ##
+
+# Redis settings:
+redis:
+  addrs: # list of redis addresses
+    - localhost:6380
+  password: ""
+  pool_timeout: 5s
+  #  Pool size, `-1` = 10 * runtime.GOMAXPROCS
+  pool_size: -1
+  #  Minimum idle connections, `-1` = pool_size / 4
+  idle_size: -1
+
+# Rabbitmq
+rabbitmq:
+  uri: amqp://guest:guest@localhost:5672/
+  key: actions
+
+  # exchange settings
+  exchange:
+    name: events
+    kind: fanout # direct, fanout, topic, headers
+    durable: true
+    auto_delete: false
+    internal: false
+    no_wait: false
+
+  # queue settings
+  queue:
+    name: "" # empty = random name
+    durable: true
+    auto_delete: false
+    exclusive: false
+    no_wait: true
+
+  persistent_delivery_mode: true
+

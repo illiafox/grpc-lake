@@ -2,15 +2,18 @@ package rabbitmq
 
 import (
 	"context"
-
 	amqp "github.com/rabbitmq/amqp091-go"
 	"go.uber.org/zap"
+	"server/internal/adapters/brokers/rabbitmq/encode"
 	"server/internal/config"
+	"server/internal/domain/entity"
 	"server/internal/domain/service/event"
-	"server/pkg/errors"
+	app_errors "server/pkg/errors"
 )
 
-type brokerStorage struct {
+var _ event.MessageStorage = (*BrokerStorage)(nil)
+
+type BrokerStorage struct {
 	channel  *amqp.Channel
 	exchange string
 	key      string
@@ -19,8 +22,8 @@ type brokerStorage struct {
 	deliveryMode uint8
 }
 
-func NewEventStorage(channel *amqp.Channel, cfg config.RabbitMQ) event.MessageStorage {
-	storage := brokerStorage{
+func NewEventStorage(channel *amqp.Channel, cfg config.RabbitMQ) BrokerStorage {
+	storage := BrokerStorage{
 		channel:  channel,
 		exchange: cfg.Exchange.Name,
 		key:      cfg.Key,
@@ -35,8 +38,13 @@ func NewEventStorage(channel *amqp.Channel, cfg config.RabbitMQ) event.MessageSt
 	return storage
 }
 
-func (b brokerStorage) SendMessageJSON(ctx context.Context, data []byte) error {
-	err := b.channel.PublishWithContext(ctx,
+func (b BrokerStorage) SendMessageJSON(ctx context.Context, msg entity.Message) error {
+	data, err := encode.MessageJSON(msg)
+	if err != nil {
+		return app_errors.NewInternal("encode message", err)
+	}
+
+	err = b.channel.PublishWithContext(ctx,
 		// exchange
 		b.exchange,
 		// key
@@ -54,19 +62,39 @@ func (b brokerStorage) SendMessageJSON(ctx context.Context, data []byte) error {
 	)
 
 	if err != nil {
-		return errors.NewInternal("publish message", err)
+		return app_errors.NewInternal("publish message", err)
 	}
 
 	return nil
 }
 
-func (b brokerStorage) HandleReturns(logger *zap.Logger) {
-	ch := make(chan string)
-	b.channel.NotifyCancel(ch)
+func (b BrokerStorage) HandleReturns(logger *zap.Logger) {
 
-	for r := range ch {
-		logger.Error("RabbitMQ: cancelled",
-			zap.String("reason", r),
-		)
+	cancel := make(chan string)
+	b.channel.NotifyCancel(cancel)
+
+	ret := make(chan amqp.Return)
+	b.channel.NotifyReturn(ret)
+
+	cl := make(chan *amqp.Error)
+	b.channel.NotifyClose(cl)
+
+	for {
+		select {
+		case c := <-cancel: // cancel
+			logger.Error("RabbitMQ: cancelled",
+				zap.String("reason", c),
+			)
+		case c := <-cl: // close
+			logger.Error("RabbitMQ: closed",
+				zap.String("reason", c.Reason),
+				zap.Int("code", c.Code),
+			)
+		case r := <-ret: // return
+			logger.Error("RabbitMQ: returned",
+				zap.String("exchange", r.Exchange),
+				zap.Uint16("replyCode", r.ReplyCode),
+			)
+		}
 	}
 }

@@ -2,11 +2,15 @@ package cache
 
 import (
 	"context"
+	"fmt"
 
 	"server/internal/domain/entity"
+	"server/internal/domain/usecase/item"
 	"server/internal/metrics"
 	"server/pkg/errors"
 )
+
+var _ item.ItemService = (*CacheService)(nil)
 
 type CacheService struct {
 	item  ItemStorage
@@ -26,7 +30,7 @@ func (c CacheService) GetItem(ctx context.Context, id string) (entity.Item, erro
 	item, err := c.cache.GetItem(ctx, id)
 	if err != nil {
 
-		// If item not found in cache, try to get it from original storage
+		// If itemMock not found in cacheMock, try to get it from original storage
 		if err == entity.ErrItemNotFound {
 
 			// Call original storage
@@ -35,23 +39,20 @@ func (c CacheService) GetItem(ctx context.Context, id string) (entity.Item, erro
 				return entity.Item{}, err
 			}
 
-			// Update cache
+			// Update cacheMock
 			err = c.cache.SetItem(ctx, id, item)
 			if err != nil {
-				if internal, ok := errors.Convert(err); ok {
-					return entity.Item{}, internal.Wrap("cache.SetItem")
-				}
-				return entity.Item{}, errors.NewInternal("cache.SetItem", err)
+				return entity.Item{}, fmt.Errorf("cacheMock.SetItem: %w", err)
 			}
 
 			return item, nil
 		}
 
 		// Internal
-		return entity.Item{}, errors.NewInternal("cache.GetItem", err)
+		return entity.Item{}, fmt.Errorf("cacheMock.GetItem: %w", err)
 	}
 
-	// If found -> Increment cache hit counter
+	// If found -> Increment cacheMock hit counter
 	metrics.IncCacheTotalHits()
 	return item, nil
 }
@@ -64,26 +65,20 @@ func (c CacheService) CreateItem(ctx context.Context, name string, data []byte, 
 		return "", err
 	}
 
-	// Invalidate (Delete) cache
+	// Invalidate (Delete) cacheMock
 	err = c.cache.DeleteItem(ctx, id)
 	if err != nil {
-		if internal, ok := errors.Convert(err); ok {
-			return "", internal.Wrap("cache.DeleteItem")
-		}
-		return "", errors.NewInternal("cache.DeleteItem", err)
+		return "", errors.NewInternal("cacheMock.DeleteItem", err)
 	}
 
 	return id, nil
 }
 
 func (c CacheService) UpdateItem(ctx context.Context, id string, item entity.Item) (updated bool, err error) {
-	// Invalidate (Delete) cache
+	// Invalidate (Delete) cacheMock
 	err = c.cache.DeleteItem(ctx, id)
 	if err != nil {
-		if internal, ok := errors.Convert(err); ok {
-			return false, internal.Wrap("cache.DeleteItem")
-		}
-		return false, errors.NewInternal("cache.DeleteItem", err)
+		return false, fmt.Errorf("cacheMock.DeleteItem: %w", err)
 	}
 
 	// Call original storage
@@ -102,13 +97,10 @@ func (c CacheService) DeleteItem(ctx context.Context, id string) (deleted bool, 
 		return false, err
 	}
 
-	// Invalidate (Delete) cache
+	// Invalidate (Delete) cacheMock
 	err = c.cache.DeleteItem(ctx, id)
 	if err != nil {
-		if internal, ok := errors.Convert(err); ok {
-			return false, internal.Wrap("cache.DeleteItem")
-		}
-		return false, errors.NewInternal("cache.DeleteItem", err)
+		return false, fmt.Errorf("cacheMock.DeleteItem: %w", err)
 	}
 
 	return deleted, nil

@@ -2,9 +2,13 @@ package item
 
 import (
 	"context"
+	"fmt"
 
+	"server/internal/adapters/api"
 	entity2 "server/internal/domain/entity"
 )
+
+var _ api.ItemUsecase = (*ItemUsecase)(nil)
 
 type ItemUsecase struct {
 	item  ItemService
@@ -31,7 +35,7 @@ func (s ItemUsecase) CreateItem(ctx context.Context, name string, data []byte, d
 
 	err = s.event.SendItemEvent(ctx, id, entity2.CreateEvent)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("SendItemEvent: %w", err)
 	}
 
 	return id, nil
@@ -46,12 +50,12 @@ func (s ItemUsecase) UpdateItem(ctx context.Context, id string, item entity2.Ite
 	if created {
 		err = s.event.SendItemEvent(ctx, id, entity2.CreateEvent)
 		if err != nil {
-			return false, err
+			return false, fmt.Errorf("SendItemEvent: %w", err)
 		}
 	} else {
 		err = s.event.SendItemEvent(ctx, id, entity2.UpdateEvent)
 		if err != nil {
-			return false, err
+			return false, fmt.Errorf("SendItemEvent: %w", err)
 		}
 	}
 
@@ -67,7 +71,7 @@ func (s ItemUsecase) DeleteItem(ctx context.Context, id string) (deleted bool, e
 	if deleted {
 		err = s.event.SendItemEvent(ctx, id, entity2.DeleteEvent)
 		if err != nil {
-			return false, err
+			return false, fmt.Errorf("SendItemEvent: %w", err)
 		}
 	}
 
