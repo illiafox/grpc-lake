@@ -7,8 +7,11 @@ import (
 	"github.com/go-redis/redis/v9"
 	"server/internal/adapters/db/redis/cache/encode"
 	"server/internal/domain/entity"
+	"server/internal/domain/service/cache"
 	"server/pkg/errors"
 )
+
+var _ cache.CacheStorage = (*CacheStorage)(nil)
 
 type CacheStorage struct {
 	client redis.UniversalClient

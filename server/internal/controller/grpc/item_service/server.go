@@ -6,16 +6,16 @@ import (
 )
 
 // Interface cast check
-var _ pb.ItemServiceServer = (*itemServer)(nil)
+var _ pb.ItemServiceServer = (*ItemServer)(nil)
 
-type itemServer struct {
+type ItemServer struct {
 	pb.UnimplementedItemServiceServer
 	//
 	item service.ItemUsecase
 }
 
-func NewServer(item service.ItemUsecase) pb.ItemServiceServer {
-	return itemServer{
+func NewServer(item service.ItemUsecase) ItemServer {
+	return ItemServer{
 		item: item,
 	}
 }

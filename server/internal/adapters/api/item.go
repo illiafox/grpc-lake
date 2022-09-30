@@ -6,6 +6,8 @@ import (
 	"server/internal/domain/entity"
 )
 
+//go:generate mockgen -source=item.go -destination=mocks/item.go -package=mocks
+
 type ItemUsecase interface {
 	// CreateItem creates new item and returns its ID.
 	CreateItem(ctx context.Context, name string, data []byte, description string) (string, error)

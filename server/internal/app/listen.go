@@ -49,7 +49,6 @@ func (app *App) Listen(item api.ItemUsecase) {
 
 		if err != http.ErrServerClosed {
 			app.Logger.Error("http server", zap.Error(err))
-			return
 		}
 	}()
 

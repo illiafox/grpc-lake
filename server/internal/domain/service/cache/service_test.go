@@ -12,11 +12,21 @@ import (
 	"server/internal/domain/service/cache/mocks"
 )
 
+const TestID = "test"
+
+var TestItem = entity.Item{
+	Name:        "1",
+	Data:        []byte("data"),
+	Description: "test description",
+}
+
+// //
+
 type CacheTestSuite struct {
 	suite.Suite
-	cache   *mocks.MockCacheStorage
-	item    *mocks.MockItemStorage
-	service CacheService
+	cacheMock    *mocks.MockCacheStorage
+	itemMock     *mocks.MockItemStorage
+	cacheService CacheService
 }
 
 func TestCacheTestSuite(t *testing.T) {
@@ -26,100 +36,84 @@ func TestCacheTestSuite(t *testing.T) {
 func (suite *CacheTestSuite) SetupTest() {
 	ctrl := gomock.NewController(suite.T())
 
-	suite.cache = mocks.NewMockCacheStorage(ctrl)
-	suite.item = mocks.NewMockItemStorage(ctrl)
-	suite.service = NewCacheService(suite.item, suite.cache)
+	suite.cacheMock = mocks.NewMockCacheStorage(ctrl)
+	suite.itemMock = mocks.NewMockItemStorage(ctrl)
+	suite.cacheService = NewCacheService(suite.itemMock, suite.cacheMock)
 }
 
 func (suite *CacheTestSuite) TestGetItem() {
 	t := suite.T()
-	const id = "test"
 
 	t.Run("Without Cache", func(t *testing.T) {
-		suite.cache.EXPECT().
-			GetItem(gomock.Any(), id).
-			Return(entity.Item{}, entity.ErrItemNotFound).
-			Times(1)
+		suite.cacheMock.EXPECT().
+			GetItem(gomock.Any(), TestID).
+			Return(entity.Item{}, entity.ErrItemNotFound)
 
-		i := entity.Item{Name: "1"}
+		suite.itemMock.EXPECT().
+			GetItem(gomock.Any(), TestID).
+			Return(TestItem, nil)
 
-		suite.item.EXPECT().
-			GetItem(gomock.Any(), id).
-			Return(i, nil).
-			Times(1)
+		suite.cacheMock.EXPECT().
+			SetItem(gomock.Any(), TestID, TestItem)
 
-		suite.cache.EXPECT().
-			SetItem(gomock.Any(), id, i).
-			Times(1)
-
-		g, err := suite.service.GetItem(context.Background(), id)
+		g, err := suite.cacheService.GetItem(context.Background(), TestID)
 		require.NoError(t, err)
-		require.Equal(t, i, g)
+		require.Equal(t, TestItem, g)
 	})
 
 	t.Run("With Cache", func(t *testing.T) {
-		i := entity.Item{Name: "1"}
+		suite.cacheMock.EXPECT().
+			GetItem(gomock.Any(), TestID).
+			Return(TestItem, nil)
 
-		suite.cache.EXPECT().
-			GetItem(gomock.Any(), id).
-			Return(i, nil).
-			Times(1)
-
-		g, err := suite.service.GetItem(context.Background(), id)
+		g, err := suite.cacheService.GetItem(context.Background(), TestID)
 		require.NoError(t, err)
-		require.Equal(t, i, g)
+		require.Equal(t, TestItem, g)
 	})
 
 	t.Run("With Error", func(t *testing.T) {
-		suite.cache.EXPECT().
-			GetItem(gomock.Any(), id).
-			Return(entity.Item{}, entity.ErrItemNotFound).
-			Times(1)
+		suite.cacheMock.EXPECT().
+			GetItem(gomock.Any(), TestID).
+			Return(entity.Item{}, entity.ErrItemNotFound)
 
-		suite.item.EXPECT().
-			GetItem(gomock.Any(), id).
-			Return(entity.Item{}, entity.ErrItemNotFound).
-			Times(1)
+		suite.itemMock.EXPECT().
+			GetItem(gomock.Any(), TestID).
+			Return(entity.Item{}, entity.ErrItemNotFound)
 
-		i, err := suite.service.GetItem(context.Background(), id)
+		cTestID, err := suite.cacheService.GetItem(context.Background(), TestID)
 		require.ErrorIs(t, entity.ErrItemNotFound, err)
-		require.Zero(t, i)
+		require.Zero(t, cTestID)
 	})
 }
 
 func (suite *CacheTestSuite) TestDeleteItem() {
 	t := suite.T()
-	const id = "test"
 
 	t.Run("Deleted", func(t *testing.T) {
 
-		suite.cache.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return(nil).
-			Times(1)
+		suite.cacheMock.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return(nil)
 
-		suite.item.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return( /*deleted*/ true, nil).
-			Times(1)
+		suite.itemMock.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return( /*deleted*/ true, nil)
 
-		deleted, err := suite.service.DeleteItem(context.Background(), id)
+		deleted, err := suite.cacheService.DeleteItem(context.Background(), TestID)
 		require.NoError(t, err)
 		require.True(t, deleted)
 	})
 
 	t.Run("Not Deleted", func(t *testing.T) {
-		suite.cache.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return(nil).
-			Times(1)
+		suite.cacheMock.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return(nil)
 
-		suite.item.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return( /*deleted*/ false, nil).
-			Times(1)
+		suite.itemMock.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return( /*deleted*/ false, nil)
 
-		deleted, err := suite.service.DeleteItem(context.Background(), id)
+		deleted, err := suite.cacheService.DeleteItem(context.Background(), TestID)
 		require.NoError(t, err)
 		require.False(t, deleted)
 	})
@@ -127,96 +121,64 @@ func (suite *CacheTestSuite) TestDeleteItem() {
 
 func (suite *CacheTestSuite) TestCreateItem() {
 	t := suite.T()
-	const id = "test"
 
 	t.Run("No Error", func(t *testing.T) {
 
-		i := entity.Item{
-			Name:        "1",
-			Data:        []byte("data"),
-			Description: "test description",
-		}
+		suite.cacheMock.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return(nil)
 
-		suite.cache.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return(nil).
-			Times(1)
+		suite.itemMock.EXPECT().
+			CreateItem(gomock.Any(), TestItem.Name, TestItem.Data, TestItem.Description).
+			Return(TestID, nil)
 
-		suite.item.EXPECT().
-			CreateItem(gomock.Any(), i.Name, i.Data, i.Description).
-			Return(id, nil).
-			Times(1)
-
-		cid, err := suite.service.CreateItem(context.Background(), i.Name, i.Data, i.Description)
+		cTestID, err := suite.cacheService.CreateItem(context.Background(), TestItem.Name, TestItem.Data, TestItem.Description)
 		require.NoError(t, err)
-		require.Equal(t, id, cid)
+		require.Equal(t, TestID, cTestID)
 	})
 
 	t.Run("With Error", func(t *testing.T) {
 		ErrCreate := errors.New("can't create")
-		i := entity.Item{
-			Name:        "1",
-			Data:        []byte("data"),
-			Description: "test description",
-		}
 
-		suite.item.EXPECT().
-			CreateItem(gomock.Any(), i.Name, i.Data, i.Description).
-			Return("", ErrCreate).
-			Times(1)
+		suite.itemMock.EXPECT().
+			CreateItem(gomock.Any(), TestItem.Name, TestItem.Data, TestItem.Description).
+			Return("", ErrCreate)
 
-		cid, err := suite.service.CreateItem(context.Background(), i.Name, i.Data, i.Description)
+		cTestID, err := suite.cacheService.CreateItem(context.Background(), TestItem.Name, TestItem.Data, TestItem.Description)
 		require.ErrorIs(t, ErrCreate, err)
-		require.Zero(t, cid)
+		require.Zero(t, cTestID)
 	})
 }
 
 func (suite *CacheTestSuite) TestUpdateItem() {
 	t := suite.T()
-	const id = "test"
 
 	t.Run("Not Updated", func(t *testing.T) {
 
-		i := entity.Item{
-			Name:        "1",
-			Data:        []byte("data"),
-			Description: "test description",
-		}
+		suite.cacheMock.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return(nil)
 
-		suite.cache.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return(nil).
-			Times(1)
+		suite.itemMock.EXPECT().
+			UpdateItem(gomock.Any(), TestID, TestItem).
+			Return( /*updated*/ false, nil)
 
-		suite.item.EXPECT().
-			UpdateItem(gomock.Any(), id, i).
-			Return( /*updated*/ false, nil).
-			Times(1)
-
-		updated, err := suite.service.UpdateItem(context.Background(), id, i)
+		updated, err := suite.cacheService.UpdateItem(context.Background(), TestID, TestItem)
 		require.NoError(t, err)
 		require.False(t, updated)
 	})
 
 	t.Run("Updated", func(t *testing.T) {
 
-		i := entity.Item{
-			Name:        "1",
-			Data:        []byte("data"),
-			Description: "test description",
-		}
+		suite.cacheMock.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return(nil)
 
-		suite.cache.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return(nil).
-			Times(1)
+		suite.itemMock.EXPECT().
+			UpdateItem(gomock.Any(), TestID, TestItem).
+			Return( /*updated*/ true, nil)
 
-		suite.item.EXPECT().
-			UpdateItem(gomock.Any(), id, i).
-			Return( /*updated*/ true, nil).
-			Times(1)
-
-		updated, err := suite.service.UpdateItem(context.Background(), id, i)
+		updated, err := suite.cacheService.UpdateItem(context.Background(), TestID, TestItem)
 		require.NoError(t, err)
 		require.True(t, updated)
 	})
@@ -224,17 +186,15 @@ func (suite *CacheTestSuite) TestUpdateItem() {
 	t.Run("With Error", func(t *testing.T) {
 		ErrUpdate := errors.New("can't update")
 
-		suite.cache.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return(nil).
-			Times(1)
+		suite.cacheMock.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return(nil)
 
-		suite.item.EXPECT().
-			UpdateItem(gomock.Any(), id, entity.Item{}).
-			Return( /*updated*/ false, ErrUpdate).
-			Times(1)
+		suite.itemMock.EXPECT().
+			UpdateItem(gomock.Any(), TestID, TestItem).
+			Return( /*updated*/ false, ErrUpdate)
 
-		_, err := suite.service.UpdateItem(context.Background(), id, entity.Item{})
+		_, err := suite.cacheService.UpdateItem(context.Background(), TestID, TestItem)
 		require.ErrorIs(t, ErrUpdate, err)
 	})
 }

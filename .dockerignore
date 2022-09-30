@@ -1,5 +1,8 @@
 .idea
 .env
 
+# config
+conf/config.yaml
+
 # server logs
-server/cmd/lake/*.txt
+*.txt

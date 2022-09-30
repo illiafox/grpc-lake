@@ -23,12 +23,14 @@ RUN useradd server
 RUN mkdir -p /server
 COPY server /server
 
-RUN pwd
 # grpc gen
 COPY gen/go/api /gen/go/api
-RUN ls -R
 
 WORKDIR /server
+
+# todo: uncomment
+# Run tests
+RUN go test ./...
 
 # Build the binary with go build
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \

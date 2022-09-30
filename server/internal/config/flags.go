@@ -5,8 +5,9 @@ import (
 )
 
 type Flags struct {
-	LogPath string
-	HTTPS   bool
+	ConfigPath string
+	LogPath    string
+	HTTPS      bool
 }
 
 const (
@@ -16,13 +17,15 @@ const (
 
 func ParseFlags() Flags {
 	var (
-		LogPath = flag.String("log", DefaultLogPath, "log file path")
-		HTTPS   = flag.Bool("https", DefaultHTTPS, "start server with https")
+		// ConfigPath = flag.String("config", "", "Path to config file")
+		LogPath = flag.String("log", DefaultLogPath, "Path to log file")
+		HTTPS   = flag.Bool("https", DefaultHTTPS, "Start server with https")
 	)
 
 	flag.Parse()
 
 	return Flags{
+		// ConfigPath: *ConfigPath,
 		LogPath: *LogPath,
 		HTTPS:   *HTTPS,
 	}

@@ -11,8 +11,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"server/internal/adapters/db/mongodb/item/model"
 	"server/internal/domain/entity"
+	"server/internal/domain/service/cache"
 	"server/pkg/errors"
 )
+
+var _ cache.ItemStorage = (*ItemStorage)(nil)
 
 type ItemStorage struct {
 	collection *mongo.Collection

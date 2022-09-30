@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	"server/internal/domain/entity"
+	entity "server/internal/domain/entity"
 )
 
 // MockCacheStorage is a mock of CacheStorage interface.

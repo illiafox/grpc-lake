@@ -4,19 +4,31 @@ import (
 	"context"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
-	entity2 "server/internal/domain/entity"
+	"server/internal/domain/entity"
 	"server/internal/domain/usecase/item/mocks"
 )
 
+const TestID = "test"
+
+var TestItem = entity.Item{
+	Name:        "name",
+	Data:        []byte("data"),
+	Created:     time.Now(),
+	Description: "description",
+}
+
+// //
+
 type ItemTestSuite struct {
 	suite.Suite
-	item    *mocks.MockItemService
-	sender  *mocks.MockEventService
-	usecase ItemUsecase
+	mockItem    *mocks.MockItemService
+	mockSender  *mocks.MockEventService
+	itemUsecase ItemUsecase
 }
 
 func TestItemTestSuite(t *testing.T) {
@@ -26,24 +38,22 @@ func TestItemTestSuite(t *testing.T) {
 func (suite *ItemTestSuite) SetupSuite() {
 	ctrl := gomock.NewController(suite.T())
 
-	suite.item = mocks.NewMockItemService(ctrl)
-	suite.sender = mocks.NewMockEventService(ctrl)
-	suite.usecase = NewItemUsecase(suite.item, suite.sender)
+	suite.mockItem = mocks.NewMockItemService(ctrl)
+	suite.mockSender = mocks.NewMockEventService(ctrl)
+	suite.itemUsecase = NewItemUsecase(suite.mockItem, suite.mockSender)
 }
 
 func (suite *ItemTestSuite) TestGetItem() {
 	t := suite.T()
-	const id = "test"
 
 	t.Run("No Error", func(t *testing.T) {
-		i := entity2.Item{Name: "1"}
+		i := entity.Item{Name: "1"}
 
-		suite.item.EXPECT().
-			GetItem(gomock.Any(), id).
-			Return(i, nil).
-			Times(1)
+		suite.mockItem.EXPECT().
+			GetItem(gomock.Any(), TestID).
+			Return(i, nil)
 
-		g, err := suite.usecase.GetItem(context.Background(), id)
+		g, err := suite.itemUsecase.GetItem(context.Background(), TestID)
 		require.NoError(t, err)
 		require.Equal(t, i, g)
 	})
@@ -51,12 +61,11 @@ func (suite *ItemTestSuite) TestGetItem() {
 	t.Run("Error", func(t *testing.T) {
 		ErrGet := errors.New("get error")
 
-		suite.item.EXPECT().
-			GetItem(gomock.Any(), id).
-			Return(entity2.Item{}, ErrGet).
-			Times(1)
+		suite.mockItem.EXPECT().
+			GetItem(gomock.Any(), TestID).
+			Return(entity.Item{}, ErrGet)
 
-		g, err := suite.usecase.GetItem(context.Background(), id)
+		g, err := suite.itemUsecase.GetItem(context.Background(), TestID)
 		require.ErrorIs(t, ErrGet, err)
 		require.Zero(t, g)
 	})
@@ -65,56 +74,51 @@ func (suite *ItemTestSuite) TestGetItem() {
 func (suite *ItemTestSuite) TestCreateItem() {
 	t := suite.T()
 
-	const (
-		id          = "1"
-		name        = "test"
-		description = "description"
-	)
-	var data = []byte("data")
-
 	t.Run("No Error", func(t *testing.T) {
 
-		suite.item.EXPECT().
-			CreateItem(gomock.Any(), name, data, description).
-			Return(id, nil).Times(1)
+		suite.mockItem.EXPECT().
+			CreateItem(gomock.Any(), TestItem.Name, TestItem.Data, TestItem.Description).
+			Return(TestID, nil)
 
-		suite.sender.EXPECT().
-			SendItemEvent(gomock.Any(), id, entity2.CreateEvent).
-			Return(nil).Times(1)
+		suite.mockSender.EXPECT().
+			SendItemEvent(gomock.Any(), TestID, entity.CreateEvent).
+			Return(nil)
 
-		cid, err := suite.usecase.CreateItem(context.Background(), name, data, description)
+		cTestID, err := suite.itemUsecase.CreateItem(context.Background(),
+			TestItem.Name, TestItem.Data, TestItem.Description,
+		)
 		require.NoError(t, err)
-		require.Equal(t, id, cid)
+		require.Equal(t, TestID, cTestID)
 	})
 
 	t.Run("Error", func(t *testing.T) {
 		ErrCreate := errors.New("create error")
 
-		suite.item.EXPECT().
-			CreateItem(gomock.Any(), name, data, description).
-			Return("", ErrCreate).Times(1)
+		suite.mockItem.EXPECT().
+			CreateItem(gomock.Any(), TestItem.Name, TestItem.Data, TestItem.Description).
+			Return("", ErrCreate)
 
-		cid, err := suite.usecase.CreateItem(context.Background(), name, data, description)
+		cTestID, err := suite.itemUsecase.CreateItem(context.Background(),
+			TestItem.Name, TestItem.Data, TestItem.Description,
+		)
 		require.ErrorIs(t, ErrCreate, err)
-		require.Zero(t, cid)
+		require.Zero(t, cTestID)
 	})
 }
 
 func (suite *ItemTestSuite) TestDeleteItem() {
 
 	t := suite.T()
-	const id = "test"
-
 	t.Run("No Error", func(t *testing.T) {
-		suite.item.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return( /*deleted*/ true, nil).Times(1)
+		suite.mockItem.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return( /*deleted*/ true, nil)
 
-		suite.sender.EXPECT().
-			SendItemEvent(gomock.Any(), id, entity2.DeleteEvent).
-			Return(nil).Times(1)
+		suite.mockSender.EXPECT().
+			SendItemEvent(gomock.Any(), TestID, entity.DeleteEvent).
+			Return(nil)
 
-		deleted, err := suite.usecase.DeleteItem(context.Background(), id)
+		deleted, err := suite.itemUsecase.DeleteItem(context.Background(), TestID)
 		require.NoError(t, err)
 		require.True(t, deleted)
 	})
@@ -122,11 +126,11 @@ func (suite *ItemTestSuite) TestDeleteItem() {
 	t.Run("Error", func(t *testing.T) {
 		ErrDelete := errors.New("delete error")
 
-		suite.item.EXPECT().
-			DeleteItem(gomock.Any(), id).
-			Return( /*deleted*/ false, ErrDelete).Times(1)
+		suite.mockItem.EXPECT().
+			DeleteItem(gomock.Any(), TestID).
+			Return( /*deleted*/ false, ErrDelete)
 
-		deleted, err := suite.usecase.DeleteItem(context.Background(), id)
+		deleted, err := suite.itemUsecase.DeleteItem(context.Background(), TestID)
 		require.ErrorIs(t, ErrDelete, err)
 		require.False(t, deleted)
 	})
