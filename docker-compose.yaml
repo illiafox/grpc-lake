@@ -88,6 +88,11 @@ services:
 
 
   app:
+
+    healthcheck:
+      test: wget --spider http://localhost:8082/healthcheck
+      interval: 1m
+
     depends_on:
       mongodb:
         condition: service_healthy
