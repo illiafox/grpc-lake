@@ -2,13 +2,16 @@ package http
 
 import (
 	"fmt"
+	"go.uber.org/zap"
 	"net/http"
 	"net/http/pprof"
+	"server/internal/adapters/api"
+	"server/internal/controller/http/healthcheck"
 
 	"server/internal/metrics"
 )
 
-func NewServer(host string, port int) *http.Server {
+func NewServer(logger *zap.Logger, host string, port int, item api.ItemUsecase) *http.Server {
 	router := http.NewServeMux()
 
 	// pprof
@@ -24,6 +27,12 @@ func NewServer(host string, port int) *http.Server {
 	// prometheus metrics
 	{
 		router.Handle("/metrics", metrics.HTTP())
+	}
+
+	// health check
+	{
+		check := healthcheck.NewServerHealthCheck(item, logger)
+		router.HandleFunc("/healthcheck", check.HealthCheck)
 	}
 
 	server := &http.Server{
