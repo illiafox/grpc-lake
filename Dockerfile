@@ -42,5 +42,8 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
 # why not scratch? we need bash to connect to the container
 FROM busybox:latest
 
+# Sentry needs certificates
+COPY --from=builder /etc/ssl/certs /etc/ssl/certs
+
 COPY --from=builder /bin/server /server
 ENTRYPOINT ["./server"]

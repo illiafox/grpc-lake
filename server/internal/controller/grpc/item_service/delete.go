@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"server/internal/controller/grpc/interceptor/middleware"
+	"server/internal/controller/grpc/interceptor/logger"
 	app_errors "server/pkg/errors"
 )
 
@@ -19,7 +19,7 @@ func (s ItemServer) DeleteItem(ctx context.Context, request *pb.DeleteItemReques
 	if err != nil {
 		internal := new(app_errors.InternalError)
 		if ok := errors.As(err, internal); ok {
-			middleware.MustGetLogger(ctx).Error("DeleteItem", zap.Error(internal))
+			logger.MustGetLogger(ctx).Error("DeleteItem", zap.Error(internal))
 			return nil, status.Error(codes.Internal, fmt.Sprintf("DeleteItem: %s", internal))
 		}
 

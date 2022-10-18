@@ -20,8 +20,6 @@ func NewMetricsInterceptor() grpc.UnaryServerInterceptor {
 			switch status.Convert(err).Code() {
 
 			case codes.Internal:
-				fallthrough
-			default:
 				metrics.IncGrpcErrorRequests()
 
 			}

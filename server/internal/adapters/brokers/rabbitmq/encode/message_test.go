@@ -2,9 +2,10 @@ package encode
 
 import (
 	"encoding/json"
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"server/internal/domain/entity"
-	"testing"
 )
 
 func TestEncodeMessage(t *testing.T) {

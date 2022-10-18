@@ -31,7 +31,7 @@ func (app *App) Listen(item api.ItemUsecase) {
 	}()
 
 	// HTTP
-	httpServer := httpserver.NewServer("0.0.0.0", app.Config.HTTP.Port)
+	httpServer := httpserver.NewServer(app.Logger, "0.0.0.0", app.Config.HTTP.Port, item)
 	go func() {
 		defer cancel()
 		app.Logger.Info("HTTP server started", zap.Int("port", app.Config.HTTP.Port))
