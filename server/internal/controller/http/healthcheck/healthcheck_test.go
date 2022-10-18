@@ -2,14 +2,15 @@ package healthcheck
 
 import (
 	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
-	"net/http"
-	"net/http/httptest"
 	"server/internal/adapters/api/mocks"
-	"testing"
 )
 
 type TestHealthCheckSuite struct {

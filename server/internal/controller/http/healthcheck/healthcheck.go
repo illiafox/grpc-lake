@@ -2,11 +2,12 @@ package healthcheck
 
 import (
 	"context"
-	"go.uber.org/zap"
 	"net/http"
+	"time"
+
+	"go.uber.org/zap"
 	service "server/internal/adapters/api"
 	"server/internal/domain/entity"
-	"time"
 )
 
 type ServerHealthCheck struct {

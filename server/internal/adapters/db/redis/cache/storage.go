@@ -2,9 +2,9 @@ package cache
 
 import (
 	"context"
-	"github.com/getsentry/sentry-go"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/go-redis/redis/v9"
 	"server/internal/adapters/db/redis/cache/encode"
 	"server/internal/domain/entity"

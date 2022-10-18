@@ -2,11 +2,12 @@ package event
 
 import (
 	"context"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 	"server/internal/domain/entity"
 	"server/internal/domain/service/event/mocks"
-	"testing"
 )
 
 const TestID = "test"

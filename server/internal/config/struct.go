@@ -5,19 +5,19 @@ import "time"
 // // Metrics // //
 
 type Sentry struct {
-	DSN   string `yaml:"dsn" env:"SENTRY_DSN" env-required:"true"`
+	DSN   string `yaml:"dsn"   env:"SENTRY_DSN"   env-required:"true"`
 	Debug bool   `yaml:"debug" env:"SENTRY_DEBUG"`
 	// Sample rate 0.1 - 1.0
 	// 	0.1 - 10% of events will be sent
 	// 	1.0 - 100% of events will be sent
 	TracesSampleRate float64       `yaml:"traces_sample_rate" env:"SENTRY_TRACES_SAMPLE_RATE" env-required:"true"`
-	FlushTimeout     time.Duration `yaml:"flush_timeout" env:"SENTRY_FLUSH_TIMEOUT" env-required:"true"`
+	FlushTimeout     time.Duration `yaml:"flush_timeout"      env:"SENTRY_FLUSH_TIMEOUT"      env-required:"true"`
 }
 
 // // Database connections // //
 
 type MongoDB struct {
-	URI        string        `yaml:"uri"        env:"MONGODB_URI" env-required:"true"`
+	URI        string        `yaml:"uri"        env:"MONGODB_URI"             env-required:"true"`
 	Database   string        `yaml:"database"   env:"MONGODB_DATABASE"`
 	Collection string        `yaml:"collection" env:"MONGODB_COLLECTION"`
 	Timeout    time.Duration `yaml:"timeout"    env:"MONGODB_CONNECT_TIMEOUT" env-default:"5s"`

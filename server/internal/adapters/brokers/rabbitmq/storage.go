@@ -2,6 +2,7 @@ package rabbitmq
 
 import (
 	"context"
+
 	"github.com/getsentry/sentry-go"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"go.uber.org/zap"

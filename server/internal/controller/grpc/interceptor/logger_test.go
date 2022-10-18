@@ -5,11 +5,11 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-	"server/internal/controller/grpc/interceptor/logger"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
+	"server/internal/controller/grpc/interceptor/logger"
 	"server/pkg/log"
 )
 

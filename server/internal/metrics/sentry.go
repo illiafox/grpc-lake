@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/getsentry/sentry-go"
 	"io"
 	"net/http"
 	"os"
+
+	"github.com/getsentry/sentry-go"
 	"server/internal/config"
 )
 

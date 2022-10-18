@@ -2,6 +2,7 @@ package interceptor
 
 import (
 	"context"
+
 	"github.com/getsentry/sentry-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

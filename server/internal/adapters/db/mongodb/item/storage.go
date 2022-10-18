@@ -3,9 +3,9 @@ package item
 import (
 	"context"
 	"fmt"
-	"github.com/getsentry/sentry-go"
 	"time"
 
+	"github.com/getsentry/sentry-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
