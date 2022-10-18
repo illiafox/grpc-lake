@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"server/internal/adapters/api/mocks"
-	"server/internal/controller/grpc/interceptor/middleware"
+	"server/internal/controller/grpc/interceptor/logger"
 	"server/internal/controller/grpc/item_service/dto"
 	"server/internal/domain/entity"
 	app_errors "server/pkg/errors"
@@ -55,7 +55,7 @@ func (suite *TestGrpcServerSuite) TestGetItem() {
 	t := suite.T()
 
 	// context with logger
-	ctx := middleware.WithLogger(context.Background(), zap.NewNop())
+	ctx := logger.WithLogger(context.Background(), zap.NewNop())
 
 	t.Run("No Error", func(t *testing.T) {
 		suite.itemMock.GetItem(ctx, TestID).Return(TestItem, nil)
@@ -97,7 +97,7 @@ func (suite *TestGrpcServerSuite) TestDeleteItem() {
 	t := suite.T()
 
 	// context with logger
-	ctx := middleware.WithLogger(context.Background(), zap.NewNop())
+	ctx := logger.WithLogger(context.Background(), zap.NewNop())
 
 	t.Run("No Error", func(t *testing.T) {
 		test := func(deleted bool) func(t *testing.T) {
@@ -136,7 +136,7 @@ func (suite *TestGrpcServerSuite) TestCreateItem() {
 	t := suite.T()
 
 	// context with logger
-	ctx := middleware.WithLogger(context.Background(), zap.NewNop())
+	ctx := logger.WithLogger(context.Background(), zap.NewNop())
 
 	t.Run("No Error", func(t *testing.T) {
 		suite.itemMock.CreateItem(ctx,
@@ -175,7 +175,7 @@ func (suite *TestGrpcServerSuite) TestUpdate() {
 	t := suite.T()
 
 	// context with logger
-	ctx := middleware.WithLogger(context.Background(), zap.NewNop())
+	ctx := logger.WithLogger(context.Background(), zap.NewNop())
 
 	t.Run("No Error", func(t *testing.T) {
 

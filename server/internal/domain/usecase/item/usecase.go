@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/getsentry/sentry-go"
 	"server/internal/adapters/api"
-	entity2 "server/internal/domain/entity"
+	entity "server/internal/domain/entity"
 )
 
 var _ api.ItemUsecase = (*ItemUsecase)(nil)
@@ -22,18 +23,25 @@ func NewItemUsecase(item ItemService, event EventService) ItemUsecase {
 	}
 }
 
-func (s ItemUsecase) GetItem(ctx context.Context, id string) (entity2.Item, error) {
+func (s ItemUsecase) GetItem(ctx context.Context, id string) (entity.Item, error) {
 	return s.item.GetItem(ctx, id)
 }
 
 func (s ItemUsecase) CreateItem(ctx context.Context, name string, data []byte, description string) (string, error) {
 
-	id, err := s.item.CreateItem(ctx, name, data, description)
+	span := sentry.StartSpan(ctx, "CreateItem")
+	id, err := s.item.CreateItem(span.Context(), name, data, description)
+	span.Finish()
 	if err != nil {
 		return "", err
 	}
 
-	err = s.event.SendItemEvent(ctx, id, entity2.CreateEvent)
+	//
+
+	span = sentry.StartSpan(ctx, "SendItemEvent")
+	defer span.Finish()
+
+	err = s.event.SendItemEvent(span.Context(), id, entity.CreateEvent)
 	if err != nil {
 		return "", fmt.Errorf("SendItemEvent: %w", err)
 	}
@@ -41,19 +49,26 @@ func (s ItemUsecase) CreateItem(ctx context.Context, name string, data []byte, d
 	return id, nil
 }
 
-func (s ItemUsecase) UpdateItem(ctx context.Context, id string, item entity2.Item) (created bool, err error) {
-	created, err = s.item.UpdateItem(ctx, id, item)
+func (s ItemUsecase) UpdateItem(ctx context.Context, id string, item entity.Item) (created bool, err error) {
+	span := sentry.StartSpan(ctx, "UpdateItem")
+	created, err = s.item.UpdateItem(span.Context(), id, item)
+	span.Finish()
 	if err != nil {
 		return false, err
 	}
 
+	//
+
+	span = sentry.StartSpan(ctx, "SendItemEvent")
+	defer span.Finish()
+
 	if created {
-		err = s.event.SendItemEvent(ctx, id, entity2.CreateEvent)
+		err = s.event.SendItemEvent(span.Context(), id, entity.CreateEvent)
 		if err != nil {
 			return false, fmt.Errorf("SendItemEvent: %w", err)
 		}
 	} else {
-		err = s.event.SendItemEvent(ctx, id, entity2.UpdateEvent)
+		err = s.event.SendItemEvent(span.Context(), id, entity.UpdateEvent)
 		if err != nil {
 			return false, fmt.Errorf("SendItemEvent: %w", err)
 		}
@@ -63,13 +78,21 @@ func (s ItemUsecase) UpdateItem(ctx context.Context, id string, item entity2.Ite
 }
 
 func (s ItemUsecase) DeleteItem(ctx context.Context, id string) (deleted bool, err error) {
-	deleted, err = s.item.DeleteItem(ctx, id)
+
+	span := sentry.StartSpan(ctx, "DeleteItem")
+	deleted, err = s.item.DeleteItem(span.Context(), id)
+	span.Finish()
 	if err != nil {
 		return false, err
 	}
 
+	//
+
 	if deleted {
-		err = s.event.SendItemEvent(ctx, id, entity2.DeleteEvent)
+		span = sentry.StartSpan(ctx, "SendItemEvent")
+		defer span.Finish()
+
+		err = s.event.SendItemEvent(span.Context(), id, entity.DeleteEvent)
 		if err != nil {
 			return false, fmt.Errorf("SendItemEvent: %w", err)
 		}

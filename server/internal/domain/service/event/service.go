@@ -3,6 +3,8 @@ package event
 import (
 	"context"
 	"fmt"
+
+	"github.com/getsentry/sentry-go"
 	"server/internal/domain/entity"
 	"server/internal/domain/usecase/item"
 )
@@ -22,7 +24,10 @@ func NewEventService(sender MessageStorage) EventService {
 func (e EventService) SendItemEvent(ctx context.Context, id string, action entity.Action) error {
 	msg := entity.NewMessage(id, action)
 
-	err := e.sender.SendMessageJSON(ctx, msg)
+	span := sentry.StartSpan(ctx, "SendMessageJSON")
+	defer span.Finish()
+
+	err := e.sender.SendMessageJSON(span.Context(), msg)
 	if err != nil {
 		return fmt.Errorf("SendMessageJSON: %w", err)
 	}

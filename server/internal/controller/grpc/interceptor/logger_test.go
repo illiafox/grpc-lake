@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
-	"server/internal/controller/grpc/interceptor/middleware"
+	"server/internal/controller/grpc/interceptor/logger"
 	"server/pkg/log"
 )
 
@@ -17,14 +17,15 @@ func TestLoggerInterceptor(t *testing.T) {
 	const method = "/test"
 
 	var buf bytes.Buffer
-	logger := log.NewLogger(io.Discard, &buf)
 
-	interceptor := NewLoggerInterceptor(logger)
+	interceptor := NewLoggerInterceptor(
+		log.NewLogger(io.Discard, &buf),
+	)
 	require.NotNil(t, interceptor)
 
 	// fake handler
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		l := middleware.MustGetLogger(ctx)
+		l := logger.MustGetLogger(ctx)
 
 		l.Info("test")
 		require.NoError(t, l.Sync())

@@ -2,12 +2,12 @@ package http
 
 import (
 	"fmt"
-	"go.uber.org/zap"
 	"net/http"
 	"net/http/pprof"
+
+	"go.uber.org/zap"
 	"server/internal/adapters/api"
 	"server/internal/controller/http/healthcheck"
-
 	"server/internal/metrics"
 )
 

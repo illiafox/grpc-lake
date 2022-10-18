@@ -12,10 +12,6 @@ run:
 # # docker compose
 .PHONY: compose
 compose: compose-down
-	docker-compose up -d
-
-.PHONY: compose-debug
-compose-debug: compose-down
 	docker-compose up -d --build
 
 .PHONY: compose-down

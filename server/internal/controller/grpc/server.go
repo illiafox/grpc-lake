@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	service "server/internal/adapters/api"
-	interceptor2 "server/internal/controller/grpc/interceptor"
+	"server/internal/controller/grpc/interceptor"
 	"server/internal/controller/grpc/item_service"
 )
 
@@ -33,8 +33,9 @@ func NewServer(logger *zap.Logger, item service.ItemUsecase) Server {
 
 	server := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
-			interceptor2.NewMetricsInterceptor(),      // out
-			interceptor2.NewLoggerInterceptor(logger), // in
+			interceptor.NewMetricsInterceptor(), // out
+			interceptor.NewSentryInterceptor(),
+			interceptor.NewLoggerInterceptor(logger), // in
 		),
 	)
 
