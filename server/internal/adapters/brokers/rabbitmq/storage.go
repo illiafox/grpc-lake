@@ -101,7 +101,6 @@ func (b BrokerStorage) HandleReturns(logger *zap.Logger) {
 				zap.Error(c),
 			)
 		case r := <-ret: // return
-			// TODO: handle capture
 			// sentry.CaptureMessage(r.ReplyCode)
 
 			logger.Error("RabbitMQ: returned",

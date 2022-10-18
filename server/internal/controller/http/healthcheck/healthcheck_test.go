@@ -62,5 +62,3 @@ func (s *TestHealthCheckSuite) TestOk() {
 	require.Equal(t, http.StatusOK, recorder.Code)
 	require.Equal(t, "ok", resp.Message)
 }
-
-// TODO: add more tests
