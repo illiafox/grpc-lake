@@ -5,4 +5,4 @@
 conf/config.yaml
 
 # server logs
-server/cmd/lake/*.txt
+*.txt

@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
 	"time"
 
 	"github.com/go-redis/redis/v9"
@@ -27,7 +28,10 @@ func NewCacheStorage(client redis.UniversalClient, expire time.Duration) CacheSt
 
 func (c CacheStorage) GetItem(ctx context.Context, id string) (entity.Item, error) {
 
-	data, err := c.client.Get(ctx, id).Bytes()
+	// Get message
+	span := sentry.StartSpan(ctx, "Redis.Get")
+	data, err := c.client.Get(span.Context(), id).Bytes()
+	span.Finish()
 	if err != nil {
 		if err == redis.Nil {
 			return entity.Item{}, entity.ErrItemNotFound
@@ -35,6 +39,10 @@ func (c CacheStorage) GetItem(ctx context.Context, id string) (entity.Item, erro
 
 		return entity.Item{}, errors.NewInternal("redis.Get", err)
 	}
+
+	// Decode message
+	span = sentry.StartSpan(ctx, "UnmarshalMsg")
+	defer span.Finish()
 
 	var item encode.Item
 	_, err = item.UnmarshalMsg(data)
@@ -47,14 +55,20 @@ func (c CacheStorage) GetItem(ctx context.Context, id string) (entity.Item, erro
 
 func (c CacheStorage) SetItem(ctx context.Context, id string, item entity.Item) error {
 
+	// Encode item
+	span := sentry.StartSpan(ctx, "Encode Item")
 	e := encode.Item(item)
-
 	data, err := e.MarshalMsg(nil)
+	span.Finish()
 	if err != nil {
 		return errors.NewInternal("encode.MarshalMsg", err)
 	}
 
-	err = c.client.Set(ctx, id, data, c.expire).Err()
+	// Set item to cache
+	span = sentry.StartSpan(ctx, "Redis.Set")
+	defer span.Finish()
+
+	err = c.client.Set(span.Context(), id, data, c.expire).Err()
 	if err != nil {
 		return errors.NewInternal("redis.Set", err)
 	}
@@ -64,7 +78,10 @@ func (c CacheStorage) SetItem(ctx context.Context, id string, item entity.Item) 
 
 func (c CacheStorage) DeleteItem(ctx context.Context, id string) error {
 
-	err := c.client.Del(ctx, id).Err()
+	span := sentry.StartSpan(ctx, "Redis.Del")
+	defer span.Finish()
+
+	err := c.client.Del(span.Context(), id).Err()
 	if err != nil {
 		return errors.NewInternal("redis.Del", err)
 	}

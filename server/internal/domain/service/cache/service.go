@@ -3,14 +3,14 @@ package cache
 import (
 	"context"
 	"fmt"
-
+	"github.com/getsentry/sentry-go"
 	"server/internal/domain/entity"
-	"server/internal/domain/usecase/item"
+	itemUsecase "server/internal/domain/usecase/item"
 	"server/internal/metrics"
 	"server/pkg/errors"
 )
 
-var _ item.ItemService = (*CacheService)(nil)
+var _ itemUsecase.ItemService = (*CacheService)(nil)
 
 type CacheService struct {
 	item  ItemStorage
@@ -25,34 +25,41 @@ func NewCacheService(storage ItemStorage, cache CacheStorage) CacheService {
 }
 
 func (c CacheService) GetItem(ctx context.Context, id string) (entity.Item, error) {
-
 	metrics.IncCacheTotalRequests()
-	item, err := c.cache.GetItem(ctx, id)
+
+	span := sentry.StartSpan(ctx, "Cache.GetItem")
+	item, err := c.cache.GetItem(span.Context(), id)
+	span.Finish()
+
 	if err != nil {
 
-		// If itemMock not found in cacheMock, try to get it from original storage
+		// If itemMock not found in cache, try to get it from original storage
 		if err == entity.ErrItemNotFound {
 
 			// Call original storage
-			item, err = c.item.GetItem(ctx, id)
+			span = sentry.StartSpan(ctx, "MainStorage.GetItem")
+			item, err = c.item.GetItem(span.Context(), id)
+			span.Finish()
 			if err != nil {
 				return entity.Item{}, err
 			}
 
-			// Update cacheMock
-			err = c.cache.SetItem(ctx, id, item)
+			// Update cache
+			span = sentry.StartSpan(ctx, "Cache.SetItem")
+			err = c.cache.SetItem(span.Context(), id, item)
+			span.Finish()
 			if err != nil {
-				return entity.Item{}, fmt.Errorf("cacheMock.SetItem: %w", err)
+				return entity.Item{}, fmt.Errorf("cache.SetItem: %w", err)
 			}
 
 			return item, nil
 		}
 
-		// Internal
-		return entity.Item{}, fmt.Errorf("cacheMock.GetItem: %w", err)
+		// Capture
+		return entity.Item{}, fmt.Errorf("cache.GetItem: %w", err)
 	}
 
-	// If found -> Increment cacheMock hit counter
+	// If found -> Increment cache hit counter
 	metrics.IncCacheTotalHits()
 	return item, nil
 }
@@ -60,29 +67,38 @@ func (c CacheService) GetItem(ctx context.Context, id string) (entity.Item, erro
 func (c CacheService) CreateItem(ctx context.Context, name string, data []byte, description string) (string, error) {
 
 	// Call original storage
-	id, err := c.item.CreateItem(ctx, name, data, description)
+	span := sentry.StartSpan(ctx, "MainStorage.CreateItem")
+	id, err := c.item.CreateItem(span.Context(), name, data, description)
+	span.Finish()
 	if err != nil {
 		return "", err
 	}
 
-	// Invalidate (Delete) cacheMock
-	err = c.cache.DeleteItem(ctx, id)
+	// Invalidate (Delete) cache
+	span = sentry.StartSpan(ctx, "Cache.DeleteItem")
+	err = c.cache.DeleteItem(span.Context(), id)
+	span.Finish()
 	if err != nil {
-		return "", errors.NewInternal("cacheMock.DeleteItem", err)
+		return "", errors.NewInternal("cache.DeleteItem", err)
 	}
 
 	return id, nil
 }
 
 func (c CacheService) UpdateItem(ctx context.Context, id string, item entity.Item) (updated bool, err error) {
-	// Invalidate (Delete) cacheMock
-	err = c.cache.DeleteItem(ctx, id)
+
+	// Invalidate (Delete) cache
+	span := sentry.StartSpan(ctx, "Cache.DeleteItem")
+	err = c.cache.DeleteItem(span.Context(), id)
+	span.Finish()
 	if err != nil {
-		return false, fmt.Errorf("cacheMock.DeleteItem: %w", err)
+		return false, fmt.Errorf("cache.DeleteItem: %w", err)
 	}
 
 	// Call original storage
-	updated, err = c.item.UpdateItem(ctx, id, item)
+	span = sentry.StartSpan(ctx, "MainStorage.UpdateItem")
+	updated, err = c.item.UpdateItem(span.Context(), id, item)
+	span.Finish()
 	if err != nil {
 		return false, err
 	}
@@ -91,16 +107,20 @@ func (c CacheService) UpdateItem(ctx context.Context, id string, item entity.Ite
 }
 func (c CacheService) DeleteItem(ctx context.Context, id string) (deleted bool, err error) {
 
-	// Call original storage
-	deleted, err = c.item.DeleteItem(ctx, id)
+	// Invalidate (Delete) cache
+	span := sentry.StartSpan(ctx, "Cache.DeleteItem")
+	err = c.cache.DeleteItem(span.Context(), id)
+	span.Finish()
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("cache.DeleteItem: %w", err)
 	}
 
-	// Invalidate (Delete) cacheMock
-	err = c.cache.DeleteItem(ctx, id)
+	// Call original storage
+	span = sentry.StartSpan(ctx, "MainStorage.DeleteItem")
+	deleted, err = c.item.DeleteItem(span.Context(), id)
+	span.Finish()
 	if err != nil {
-		return false, fmt.Errorf("cacheMock.DeleteItem: %w", err)
+		return false, err
 	}
 
 	return deleted, nil

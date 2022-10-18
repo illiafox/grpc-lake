@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"server/internal/controller/grpc/interceptor/middleware"
+	"server/internal/controller/grpc/interceptor/logger"
 	"server/internal/controller/grpc/item_service/dto"
 	"server/internal/domain/entity"
 	app_errors "server/pkg/errors"
@@ -26,7 +26,7 @@ func (s ItemServer) GetItem(ctx context.Context, request *pb.GetItemRequest) (*p
 
 		internal := new(app_errors.InternalError)
 		if ok := errors.As(err, internal); ok {
-			middleware.MustGetLogger(ctx).Error("GetItem",
+			logger.MustGetLogger(ctx).Error("GetItem",
 				zap.Error(internal),
 				zap.String("line", internal.Line),
 			)

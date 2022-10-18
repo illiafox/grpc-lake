@@ -3,6 +3,7 @@ package item
 import (
 	"context"
 	"fmt"
+	"github.com/getsentry/sentry-go"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -56,9 +57,11 @@ func (i ItemStorage) UpdateItem(ctx context.Context, id string, item entity.Item
 		return false, fmt.Errorf("parse id: %w", err)
 	}
 
-	opts := options.Update().SetUpsert(true)
+	span := sentry.StartSpan(ctx, "MongoDB.UpdateByID")
+	defer span.Finish()
 
-	result, err := i.collection.UpdateByID(ctx, objectID, bson.D{
+	opts := options.Update().SetUpsert(true)
+	result, err := i.collection.UpdateByID(span.Context(), objectID, bson.D{
 		{Key: "$set", Value: model.EntityToItem(item)},
 	}, opts)
 
@@ -75,6 +78,9 @@ func (i ItemStorage) DeleteItem(ctx context.Context, id string) (deleted bool, e
 		return false, fmt.Errorf("parse id: %w", err)
 	}
 
+	span := sentry.StartSpan(ctx, "MongoDB.DeleteOne")
+	defer span.Finish()
+
 	result, err := i.collection.DeleteOne(ctx, bson.D{
 		{Key: "_id", Value: objectID},
 	})
@@ -87,6 +93,9 @@ func (i ItemStorage) DeleteItem(ctx context.Context, id string) (deleted bool, e
 }
 
 func (i ItemStorage) CreateItem(ctx context.Context, name string, data []byte, description string) (string, error) {
+
+	span := sentry.StartSpan(ctx, "MongoDB.InsertOne")
+	defer span.Finish()
 
 	res, err := i.collection.InsertOne(ctx, model.Item{
 		Name: name,

@@ -2,6 +2,7 @@ package rabbitmq
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"go.uber.org/zap"
 	"server/internal/adapters/brokers/rabbitmq/encode"
@@ -39,10 +40,17 @@ func NewEventStorage(channel *amqp.Channel, cfg config.RabbitMQ) BrokerStorage {
 }
 
 func (b BrokerStorage) SendMessageJSON(ctx context.Context, msg entity.Message) error {
+	// Encode message
+	span := sentry.StartSpan(ctx, "encode.MessageJSON")
 	data, err := encode.MessageJSON(msg)
+	span.Finish()
 	if err != nil {
 		return app_errors.NewInternal("encode message", err)
 	}
+
+	// Publish
+	span = sentry.StartSpan(ctx, "RabbitMQ.PublishWithContext")
+	defer span.Finish()
 
 	err = b.channel.PublishWithContext(ctx,
 		// exchange
@@ -82,15 +90,19 @@ func (b BrokerStorage) HandleReturns(logger *zap.Logger) {
 	for {
 		select {
 		case c := <-cancel: // cancel
+			sentry.CaptureMessage(c)
 			logger.Error("RabbitMQ: cancelled",
 				zap.String("reason", c),
 			)
 		case c := <-cl: // close
+			sentry.CaptureMessage(c.Error())
 			logger.Error("RabbitMQ: closed",
-				zap.String("reason", c.Reason),
-				zap.Int("code", c.Code),
+				zap.Error(c),
 			)
 		case r := <-ret: // return
+			// TODO: handle capture
+			// sentry.CaptureMessage(r.ReplyCode)
+
 			logger.Error("RabbitMQ: returned",
 				zap.String("exchange", r.Exchange),
 				zap.Uint16("replyCode", r.ReplyCode),
